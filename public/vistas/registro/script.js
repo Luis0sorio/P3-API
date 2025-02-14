@@ -75,7 +75,7 @@ window.onload = function(){
     labelemail.textContent = "Ingresa email : "
 
     const inputemail = document.createElement("input");
-    inputemail.setAttribute("type","text");
+    inputemail.setAttribute("type","email");
     inputemail.setAttribute("id","email");
     inputemail.classList.add("form-control","mb-3"); 
      
@@ -97,7 +97,7 @@ window.onload = function(){
     labelPassword.textContent = "Ingresa una contraseña : "
 
     const inputPassword = document.createElement("input");
-    inputPassword.setAttribute("type","text");
+    inputPassword.setAttribute("type","password");
     inputPassword.setAttribute("id","password");
     inputPassword.classList.add("form-control","mb-3"); 
 
@@ -129,4 +129,23 @@ window.onload = function(){
     const main = document.querySelector("main");
     main.appendChild(divForm);
 
+
+    btnRegister.addEventListener ("click",function (event){
+        event.preventDefault();
+        const name = inputname.value;
+        const apell1 = inputapell1.value;
+        const email = inputemail.value;
+        const usuario = inputuser.value;
+        const password = inputPassword.value;
+
+        if (!name || !apell1 || !email || !usuario || !password) {
+            alert("Has de añadir todos los campos");
+            return;
+        }
+
+        form.reset();
+
+
+    });
+    
 };
