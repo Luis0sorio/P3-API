@@ -3,7 +3,7 @@ import express from 'express';
 import conexionDB from './config/database.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import path from 'path';  // Asegúrate de agregar esta línea
+import path from 'path'; 
 
 const PORT = process.env.PORT || 3000;
 const app = express();

@@ -1,11 +1,11 @@
 
-// importamos la libreria 'mongoose'
+// Importamos la libreria 'mongoose'
 import mongoose from 'mongoose';
 
-// importamos la libreria para manejar variables de entorno (conexion a la base de datos)
+// Importamos la libreria para manejar variables de entorno (conexion a la base de datos)
 import 'dotenv/config';
 
-// creo la funcion de conexion a nuestra base de datos
+// Creo la funcion de conexion a nuestra base de datos
 const conexionDB = async() => {
   try {
     // establecemos la conexion con la base de datos
@@ -17,5 +17,5 @@ const conexionDB = async() => {
   }
 }
 
-// exportamos la funcion para ser utilizada en otros archivos del proyecto
+// Exportamos la funcion para ser utilizada en otros archivos del proyecto
 export default conexionDB;
