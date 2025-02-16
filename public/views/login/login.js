@@ -4,11 +4,20 @@ window.onload = function(){
     const divForm = document.createElement("div");
     divForm.setAttribute("id","divForm");    
     divForm.classList.add("d-flex","justify-content-center","align-items-center","min-vh-100");
+    divForm.style.backgroundColor = "aqua";
 
     //Creo el formulario
     const form = document.createElement("form");
     form.setAttribute("id","loginForm");
-    form.classList.add("container","p-4","border","rounded","w-100","max-w-400");
+    form.classList.add("container","p-4","border","rounded","d-flex","flex-column","align-items-center");
+    form.style.maxWidth = "400px";
+    form.style.minHeight = "auto";
+
+
+    //Titulo Login
+    const title = document.createElement("h2");
+    title.textContent = "Bienvenido";
+    title.classList.add("text-center","mb-4","text-primary");
 
     //Creo el contenedor para cada campo del formulario
     const formContainer = document.createElement("div");
@@ -23,9 +32,10 @@ window.onload = function(){
 
     const inputUsuario = document.createElement("input");
     inputUsuario.setAttribute("type","text");
-    inputUsuario.setAttribute("placeholder","Ingresa el Nombre del Usuario");
-    inputUsuario.setAttribute("id","usuario");
-    inputUsuario.classList.add("form-control","mb-3");
+    inputUsuario.setAttribute("placeholder","Usuario");
+    inputUsuario.setAttribute("id","Usuario");
+    inputUsuario.classList.add("form-control","mb-3","form-control-sm","w-100","rounded-pill");
+    
     
     //Agrego los elemento al contendor Form
     formContainer.appendChild(labelUsuario);
@@ -40,9 +50,9 @@ window.onload = function(){
 
     const inputPassword = document.createElement("input");
     inputPassword.setAttribute("type","password");
-    inputPassword.setAttribute("placeholder","Ingresa tu contraseña");
+    inputPassword.setAttribute("placeholder","Contraseña");
     inputPassword.setAttribute("id","password");
-    inputPassword.classList.add("form-control","mb-3");
+    inputPassword.classList.add("form-control","mb-3","form-control-sm","w-100","rounded-pill");
 
     //Agrego los elemento al contendor Form
     formContainer.appendChild(labelPassword);
@@ -52,13 +62,22 @@ window.onload = function(){
     const btnLogin = document.createElement("button");
     btnLogin.setAttribute("type","submit");
     btnLogin.setAttribute("id","btnSubmit");
-    btnLogin.classList.add("btn","btn-primary","w-100");
+    btnLogin.classList.add("btn","btn-primary","w-75","rounded-pill");
     btnLogin.textContent = "Inciar Sesion";
 
     //Agrego el formulario al contenedor principal 
+    form.appendChild(title);
     form.appendChild(formContainer);
     form.appendChild(btnLogin);
 
+    //agrego el link 
+    const link = document.createElement("a");
+    link.setAttribute("href","/registro/registro.html");
+    link.textContent = "¿No Tienes Cuenta? Regístrate";
+    link.classList.add("d-block","text-decoration-none");
+
+    //agrego el link al formulario
+    form.appendChild(link);
 
     //Agrego el formulario al div
     divForm.appendChild(form);
@@ -66,4 +85,6 @@ window.onload = function(){
     //Agrego el formulario al main 
     document.querySelector("main").appendChild(divForm);
 
+
+    
 }

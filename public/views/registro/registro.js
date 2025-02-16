@@ -1,5 +1,11 @@
 window.onload = function(){
 
+    //Crear Titulo Registro 
+    const title = document.createElement("h2");
+    title.setAttribute("id","titulo");
+    title.textContent = "Registro";
+    title.classList.add("text-center","mb-4");
+
     //Crear Div para el Formulario 
     const divForm = document.createElement("div");
     divForm.setAttribute("id","divForm");
@@ -66,7 +72,120 @@ window.onload = function(){
     rowapellidos.appendChild(colapellido1);
     rowapellidos.appendChild(colapellido2);
 
+    form.appendChild(title);
+    form.appendChild(labelname);
+    form.appendChild(inputname);
+    form.appendChild(rowapellidos);
+
     //pais //usar el pais una vez para que identifique al usuario la zona de la que es y posicionarlo en el mapa en la zona indicada //mirar //hacer un scroll de paises que este la libreria en ingles para poder utilizarla 
+
+    async function obtenerPaises() {
+        try {
+            const response = await fetch('http://api.geonames.org/countryInfoJSON?username=michael.giraldo');
+            const data = await response.json();
+            const paises = data.geonames.map(pais => ({
+                name : pais.countryName,
+                code : pais.countryCode
+            }));
+            return paises;
+        } catch (error) {
+            console.error('error al obtener los paises',error);
+        }
+    }
+
+
+    
+    async function obtenerCiudades(paisCode) {
+        try {
+            const response = await fetch(`http://api.geonames.org/searchJSON?country=${paisCode}&maxRows=10&username=michael.giraldo`);
+            const data = await response.json();
+            const ciudades = data.geonames.map(ciudad => ciudad.name);
+            return ciudades;
+        } catch (error) {
+            console.error('error al obtener las ciudades',error);
+            return [];
+        }
+
+    }
+    
+
+    async function cargarPaisesCiudades() {
+        //creo y agrego el label para el pais
+        const rowPaisCiudad = document.createElement("div");
+        rowPaisCiudad.classList.add("row","mb-3");
+
+        const colPais = document.createElement ("div");
+        colPais.classList.add("col-6");
+
+
+        const labelPais = document.createElement("label");
+        labelPais.setAttribute("for","pais");
+        labelPais.classList.add("form-label");
+        labelPais.textContent = "Selecciona un pais : ";
+
+        colPais.appendChild(labelPais);
+        const selectPais = document.createElement("select");
+        selectPais.setAttribute("id","paises");
+        selectPais.classList.add("form-control","mb-3");
+        const opcionDefaultPais = document.createElement("option"); 
+        opcionDefaultPais.textContent = "Selecciona un pais";
+        selectPais.appendChild(opcionDefaultPais);
+        
+
+        const paises = await obtenerPaises();
+        paises.forEach (pais => {
+            const option = document.createElement('option');
+            option.value = pais.code;
+            option.textContent = pais.name;
+            selectPais.appendChild(option);
+        });
+
+        colPais.appendChild(selectPais);
+
+        //
+        const colCiudad = document.createElement("div");
+        colCiudad.classList.add("col-6");
+
+        //agregamos el selector de las ciudades 
+        const labelCiudad = document.createElement("label");
+        labelCiudad.setAttribute("for","ciudad");
+        labelCiudad.classList.add("form-label");
+        labelCiudad.textContent= "Selecciona una Ciudad : ";
+
+        const selectCiudad = document.createElement("select");
+        selectCiudad.setAttribute("id","ciudad");
+        selectCiudad.classList.add("form-control","mb-3");
+        const opcionDefaultCiudad = document.createElement('option');
+        opcionDefaultCiudad.textContent = 'Selecciona una ciudad';
+        selectCiudad.appendChild(opcionDefaultCiudad);
+
+        colCiudad.appendChild(labelCiudad);
+        colCiudad.appendChild(selectCiudad);
+
+        rowPaisCiudad.appendChild(colPais);
+        rowPaisCiudad.appendChild(colCiudad);
+        
+        form.insertBefore(rowPaisCiudad, rowapellidos.nextSibling);
+
+
+        selectPais.addEventListener("change", async function () {
+            const paisSeleccionado = selectPais.value;
+            const ciudades = await obtenerCiudades(paisSeleccionado);
+            selectCiudad.innerHTML = '';
+            const opcionDefault = document.createElement('option');
+            opcionDefault.textContent = 'Selecciona una ciudad';
+            selectCiudad.appendChild(opcionDefault);
+            ciudades.forEach(ciudad =>{
+                const option = document.createElement('option');
+                option.value = ciudad;
+                option.textContent = ciudad;
+                selectCiudad.appendChild(option);
+            });         
+        });
+
+    }
+
+    cargarPaisesCiudades();
 
     //email
     const labelemail = document.createElement("label");
@@ -108,11 +227,14 @@ window.onload = function(){
     btnRegister.classList.add("btn","btn-primary","w-100");
     btnRegister.textContent = "Registrate";
 
-    //Agregar todos los elementos al formulario 
-    form.appendChild(labelname);
-    form.appendChild(inputname);
+    //link volver atras
+    const link = document.createElement("a");
+    link.setAttribute("href","/login/login.html");
+    link.textContent = "<-- Volver Atras";
+    
 
-    form.appendChild(rowapellidos);
+    //Agregar todos los elementos al formulario 
+
 
     form.appendChild(labelemail);
     form.appendChild(inputemail);
@@ -121,6 +243,9 @@ window.onload = function(){
     form.appendChild(labelPassword);
     form.appendChild(inputPassword);
     form.appendChild(btnRegister);
+    form.appendChild(link);
+   
+    
 
     //Agregar el formulario al divForm
     divForm.appendChild(form);
@@ -128,7 +253,7 @@ window.onload = function(){
     //agregar el divForm al main 
     const main = document.querySelector("main");
     main.appendChild(divForm);
-
+    main.style.backgroundColor = "aqua";
 
     btnRegister.addEventListener ("click",function (event){
         event.preventDefault();
@@ -142,7 +267,6 @@ window.onload = function(){
             alert("Has de añadir todos los campos");
             return;
         }
-
         form.reset();
 
 
