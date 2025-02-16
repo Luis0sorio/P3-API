@@ -17,7 +17,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Redirigir la raíz al archivo de login
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'vistas', 'login', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'views', 'login', 'login.html'));
+});
+
+app.get('/registro/registro.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'views', 'registro', 'registro.html'));
+});
+
+app.get('/login/login.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'views', 'login', 'login.html'));
 });
 
 app.listen(PORT, () => {
