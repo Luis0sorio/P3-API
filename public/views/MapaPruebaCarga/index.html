@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa con Mapbox</title>
+  <!-- Vincula el CSS de Mapbox -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    /* Define el tamaño del contenedor del mapa */
+    #map {
+      width: 100%;
+      height: 500px; /* Puedes ajustar la altura según tus necesidades */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Contenedor para el mapa -->
+  <div id="map"></div>
+
+  <!-- Vincula el script de Mapbox -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.js"></script>
+  
+  <script>
+    // Inicializa el mapa con tu token
+    mapboxgl.accessToken = 'pk.eyJ1IjoibWFpazEyNCIsImEiOiJjbTcwczVmeGowNGpsMmpzbmlybmpuajByIn0.s2p0IIfjzS1fGa52vRd4iQ';
+    const map = new mapboxgl.Map({
+      container: 'map', // ID del div donde se mostrará el mapa
+      style: 'mapbox://styles/mapbox/streets-v11', // Estilo del mapa
+      center: [-74.5, 40], // Coordenadas iniciales [longitud, latitud]
+      zoom: 9 // Nivel de zoom inicial
+    });
+  </script>
+
+</body>
+</html>
