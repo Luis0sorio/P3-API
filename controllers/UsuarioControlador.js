@@ -1,8 +1,14 @@
+
 // Importamos el modelo de usuario
-import Usuario from "../models/Usuario.js"; 
+const Usuario = require('../models/Usuario.js');
+// Importamos la libreria para hashear contraseñas
+const bcrypt = require('bcrypt');
+
+// Definimos cuantas veces aplicar el algoritmo de encriptacion
+const saltRounds = 10;
 
 // Función para insertar un nuevo usuario en la base de datos
-export const addNuevoUsuario = async (req, res) => {
+const addNuevoUsuario = async (req, res) => {
   try {
     // Extraemos los datos del formulario
     const { nombre, apellido1, apellido2, pais, ciudad, email, usuario, password } = req.body;
@@ -19,6 +25,9 @@ export const addNuevoUsuario = async (req, res) => {
       return res.status(400).json({ mensaje: "El email o el usuario ya están registrados" });
     }
 
+    // Hasheamos la contraseña
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
     // Creamos un nuevo usuario con los datos recibidos
     const nuevoUsuario = new Usuario({
       nombre,
@@ -28,7 +37,7 @@ export const addNuevoUsuario = async (req, res) => {
       ciudad,
       email,
       usuario,
-      password, // Nota: Falta hashear la contraseña antes de guardarla
+      password: passwordHash, 
     });
 
     // Guardamos el usuario en la base de datos
@@ -43,4 +52,5 @@ export const addNuevoUsuario = async (req, res) => {
   }
 };
 
-
+// Exportamos la función para ser utilizada en otros archivos del proyecto
+module.exports = {addNuevoUsuario};

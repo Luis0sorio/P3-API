@@ -1,7 +1,6 @@
 
 // Importamos la dependecia para mapear nuestras colecciones
-import mongoose from 'mongoose';
-
+const mongoose = require('mongoose');
 // Utilizo la clase de la libreria para mapear colecciones
 const {Schema} = mongoose;
 
@@ -14,11 +13,11 @@ const usuarioSchema = new Schema({
   ciudad: { type: String, required: true },
   email: { type: String, required: true, unique: true }, // Único para evitar duplicados
   usuario: { type: String, required: true, unique: true }, // Único para evitar duplicados
-  password: { type: String, required: true }, // Debemos hashearla
+  password: { type: String, required: true },
 });
 
 // Creo el modelo para los usuarios
 const Usuario = mongoose.model("Usuario", usuarioSchema);
 
 // Exportamos el modelo
-export default Usuario;
+module.exports = Usuario;

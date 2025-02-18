@@ -1,15 +1,15 @@
 
 // Importamos la libreria 'mongoose'
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 // Importamos la libreria para manejar variables de entorno (conexion a la base de datos)
-import 'dotenv/config';
+require('dotenv').config();
 
 // Creo la funcion de conexion a nuestra base de datos
 const conexionDB = async() => {
   try {
     // establecemos la conexion con la base de datos
-    const conexion = await mongoose.connect(process.env.MONGO_URI, {});
+    const conexion = await mongoose.connect(process.env.MONGO_URI);
     console.log(`Conectado a MongoDB: ${conexion.connection.host}`); // mensaje de exito
   } catch (error) {
     console.error(error.message); // mensaje de error
@@ -18,4 +18,4 @@ const conexionDB = async() => {
 }
 
 // Exportamos la funcion para ser utilizada en otros archivos del proyecto
-export default conexionDB;
+module.exports = conexionDB;
