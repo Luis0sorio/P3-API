@@ -258,20 +258,22 @@ window.onload = function(){
     const body  = document.querySelector("body");
     body.style.backgroundColor = "aqua";
 
-    btnRegister.addEventListener ("click",function (event){
+    btnRegister.addEventListener ("click", async function (event){
         event.preventDefault();
         const name = inputname.value;
         const apell1 = inputapell1.value;
+        const apell2 = inputapell2.value;
+        const pais = document.getElementById('paises').value;
+        const ciudad = document.getElementById('ciudad').value;
         const email = inputemail.value;
         const usuario = inputuser.value;
         const password = inputPassword.value;
 
-        if (!name || !apell1 || !email || !usuario || !password) {
-            alert("Has de añadir todos los campos");
+        if (!name || !apell1 || !pais || !ciudad || !email || !usuario || !password) {
+            alert("Todos los campos son obligatorios");
             return;
         }
         form.reset();
-
 
     });
     

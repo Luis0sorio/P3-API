@@ -1,19 +1,28 @@
-import 'dotenv/config';
-import express from 'express';
-import conexionDB from './config/database.js';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import path from 'path'; 
+// Improtamos las dependencias
+require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const conexionDB = require('./config/database.js');
+const rutas = require('./routes/rutas.js');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 const app = express();
 
-// Obtén el directorio actual usando `import.meta.url`
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+
+// Implementacion de middlewares
+// Funciones que permiten analizar, validar, registrar y modificar solicitudes
+/**
+ * Para analizar application/json -> solicitudes en formato json. Se cxonvierte en un objeto JS
+ * app.use(express.json()); 
+ * Para analizar application/x-www-form-urlencoded -> solicitudes HTML. Formularios.
+ * app.use(express.urlencoded({ extended: true }));
+ */
+
 
 // Servir archivos estáticos desde la carpeta 'public'
 app.use(express.static(path.join(__dirname, 'public')));
+// 
+app.use('/api', rutas);
 
 // Redirigir la raíz al archivo de login
 app.get('/', (req, res) => {
