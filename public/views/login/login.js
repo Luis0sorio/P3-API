@@ -3,7 +3,7 @@ window.onload = function(){
     //Div form 
     const divForm = document.createElement("div");
     divForm.setAttribute("id","divForm");    
-    divForm.classList.add("d-flex","justify-content-center","align-items-center","min-vh-100");
+    divForm.classList.add("d-flex","justify-content-center","align-items-center","min-vh-100","position-sticky");
     divForm.style.backgroundColor = "aqua";
 
     //Creo el formulario

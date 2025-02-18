@@ -9,7 +9,7 @@ window.onload = function(){
     //Crear Div para el Formulario 
     const divForm = document.createElement("div");
     divForm.setAttribute("id","divForm");
-    divForm.classList.add("d-flex","justify-content-center","align-items-center","min-vh-100");
+    divForm.classList.add("d-flex","justify-content-center","align-items-center","min-vh-75");
 
 
     //Crear form para el main 
@@ -253,7 +253,10 @@ window.onload = function(){
     //agregar el divForm al main 
     const main = document.querySelector("main");
     main.appendChild(divForm);
-    main.style.backgroundColor = "aqua";
+    
+    //agregar body
+    const body  = document.querySelector("body");
+    body.style.backgroundColor = "aqua";
 
     btnRegister.addEventListener ("click",function (event){
         event.preventDefault();
