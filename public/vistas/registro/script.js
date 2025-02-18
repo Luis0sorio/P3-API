@@ -78,7 +78,7 @@ window.onload = function(){
     inputemail.setAttribute("type","email");
     inputemail.setAttribute("id","email");
     inputemail.classList.add("form-control","mb-3"); 
-     
+    
     //usuario
     const labeluser = document.createElement("label");
     labeluser.setAttribute("for","usuario");
