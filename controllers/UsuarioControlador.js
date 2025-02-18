@@ -43,6 +43,4 @@ export const addNuevoUsuario = async (req, res) => {
   }
 };
 
-// Importamos el modelo correspondiente
-import Usuario from '..models/Usuario.js';
 
