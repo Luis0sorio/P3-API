@@ -54,3 +54,34 @@ const addNuevoUsuario = async (req, res) => {
 
 // Exportamos la función para ser utilizada en otros archivos del proyecto
 module.exports = {addNuevoUsuario};
+
+// Funcion para verificar el login de usuario
+const verificarLogin = async (req, res) => {
+  try {
+    // Extraemos los datos del formulario de login
+    const {usuario, password} = req.body;
+
+    // Verificamos que tengan valores
+    if (!usuario || !password) {
+      return res.status(400).json({ mensaje: "Usuario y contraseña son obligatorios" });
+    }
+
+    // Verificamos si el usuario o la password existen en la base de datos
+    const verificarUsuario = await Usuario.findOne({ usuario });
+    if (!verificarUsuario) {
+      return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
+    }
+
+    const verificarPassword = await bcrypt.compare(password, usuarioExistente.password);
+    if (!verificarPassword) {
+      return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
+    }
+
+    res.status(200).json({ mensaje: "Éxito al iniciar sesión"});
+
+  } catch (error) {
+    console.error("Error en el inicio de sesión: ", error);
+  }
+}
+// Exportamos la función
+module.exports = {verificarLogin};
