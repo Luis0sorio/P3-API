@@ -52,8 +52,6 @@ const addNuevoUsuario = async (req, res) => {
   }
 };
 
-// Exportamos la función para ser utilizada en otros archivos del proyecto
-module.exports = {addNuevoUsuario};
 
 // Funcion para verificar el login de usuario
 const verificarLogin = async (req, res) => {
@@ -84,4 +82,7 @@ const verificarLogin = async (req, res) => {
   }
 }
 // Exportamos la función
-module.exports = {verificarLogin};
+module.exports = {
+  addNuevoUsuario,
+  verificarLogin
+};
