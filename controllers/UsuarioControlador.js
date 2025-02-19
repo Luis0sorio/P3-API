@@ -52,7 +52,6 @@ const addNuevoUsuario = async (req, res) => {
   }
 };
 
-
 // Funcion para verificar el login de usuario
 const verificarLogin = async (req, res) => {
   try {
@@ -81,7 +80,7 @@ const verificarLogin = async (req, res) => {
     console.error("Error en el inicio de sesión: ", error);
   }
 }
-// Exportamos la función
+// Exportamos las funciones para usarlas en el proyecto
 module.exports = {
   addNuevoUsuario,
   verificarLogin
