@@ -1,3 +1,12 @@
+
+// Recuperamos el usuario en el localStorage
+// Si el usuario está autenticado, lo guardamos
+// Si no existe, seguimos en la ventana del login
+const nombreUsuario = localStorage.getItem('nombreUsuario');
+if (!nombreUsuario) {
+    window.location.href = '/login/login.html';
+}
+
 // Localizar el body
 const body = document.querySelector("body");
 
@@ -10,9 +19,7 @@ const head = document.querySelector("head");
 // Añadir el nombre del usuario en el header
 const h2 = document.createElement("h2");
 h2.setAttribute("id", "titulo");
-// Temporal
-h2.textContent = "Hola Usuario";
-
+h2.textContent = `Hola, ${nombreUsuario}`; // -> pintamos el usuario en la cabezera
 header.appendChild(h2);
 body.appendChild(header);
 
