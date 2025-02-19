@@ -275,6 +275,7 @@ window.onload = function(){
         }
         form.reset();
 
+        // AQUÍ VA EL FETCH
     });
     
 };

@@ -33,7 +33,7 @@ window.onload = function(){
     const inputUsuario = document.createElement("input");
     inputUsuario.setAttribute("type","text");
     inputUsuario.setAttribute("placeholder","Usuario");
-    inputUsuario.setAttribute("id","Usuario");
+    inputUsuario.setAttribute("id","usuario");
     inputUsuario.classList.add("form-control","mb-3","form-control-sm","w-100","rounded-pill");
     
     
@@ -85,6 +85,20 @@ window.onload = function(){
     //Agrego el formulario al main 
     document.querySelector("main").appendChild(divForm);
 
+    // Evento para confirmar el inicio de sesion
+    form.addEventListener("submit", async function (event)) {
+        event.preventDefault();
 
+        const usuario = inputUsuario.value.trim();
+        const password = inputPassword.value.trim();
+
+        if (!usuario || !password) {
+            alert("Usuario y contraseña obligatorios");
+        }
+
+        // AQUÍ VA EL FETCH
+        // aquí debemos guardar el usuario para poder mostrarlo tras el login
+        // es bueno usar localStorage, si más delante usamos JWT nosé si podria ser con sessionStorage
+    }
     
-}
+};
