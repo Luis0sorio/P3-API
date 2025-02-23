@@ -76,15 +76,76 @@ window.onload = function(){
     link.textContent = "¿No Tienes Cuenta? Regístrate";
     link.classList.add("d-block","text-decoration-none");
 
+    //mensaje error
+    const err = document.createElement("label");
+    err.setAttribute("for","error");
+    err.classList.add("form-label");
+    
+    //Creo el contenedor para mostrar los errores
+    const divError = document.createElement("div");
+    divError.setAttribute("id","divErr");
+    divError.appendChild(err);
+
     //agrego el link al formulario
     form.appendChild(link);
+
+    //agrego el div de error al formulario
+    form.appendChild(divError);
 
     //Agrego el formulario al div
     divForm.appendChild(form);
 
     //Agrego el formulario al main 
     document.querySelector("main").appendChild(divForm);
-
-
     
+    btnLogin.addEventListener('click',function(event){//añadimos un evento al boton de inicio
+        event.preventDefault();
+        console.log("Botón de login presionado");
+        let usuario={
+            usuario:inputUsuario.value,
+            password:inputPassword.value
+        }
+        inicioSesion(usuario);
+    });
+    
+    function errores(error=null) {
+        if(error!=null){//si hay error , se muestra
+            err.textContent = error; 
+        } else{
+            err.textContent = "";//vaciamos el contenedor
+        }
+    }
+    //forma diferente del fetch al registro,con una funcion general
+    async function peticion(url,headers={}) {//recibe la url y la cabecera 
+        try {
+            const response=await fetch(url,headers);//hacemos la peticion cn lo recibido
+            const data = await response.json();//respuesta
+            if (!response.ok) {//si la respuesta no es ok
+                throw new Error(data.mensaje); 
+            }
+            console.log("Respuesta recibida bien  ",data);
+            return data;
+        } catch (error) {
+            console.error(error);
+            throw error; //lanzamos el error para q se maneje donde llamen a la funcion
+        }
+    }
+    async function inicioSesion(usuario) {
+        try {
+            const data=await peticion('http://localhost:3000/api/login',{
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(usuario)
+            });
+           console.log("yasta echo",data);
+           errores(null);//llamamos otra vez a la función
+           localStorage.setItem("nombreUser", usuario.usuario);//guardamos el nombre del usuario
+           window.location.href="/Principal/index.html";//redirigimos
+        } catch (error) {
+            errores(error);//llamamos a la funcion y le pasamos el error
+        }
+    }
+
 }

@@ -10,8 +10,10 @@ const head = document.querySelector("head");
 // Añadir el nombre del usuario en el header
 const h2 = document.createElement("h2");
 h2.setAttribute("id", "titulo");
-// Temporal
-h2.textContent = "Hola Usuario";
+
+let nombreU=localStorage.getItem("nombreUser");//accedemos al nombre del usuario
+
+h2.textContent = `Hola ${nombreU}`;//personalizamos el saludo
 
 header.appendChild(h2);
 body.appendChild(header);
@@ -70,6 +72,25 @@ function cargarMapa() {
         document.getElementById('mapa').style.width = '100%';
     });
 }
-
-
+//funcion para obtener los datos del usuario
+/*
+async function datos(nombreU) {
+    try {
+        const response=await fetch('http://localhost:3000/api/datosUsuario',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(nombreU)
+        });
+        if (!response.ok) {
+            throw new Error(`Error en la petición: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Respuesta recibida ",data);
+    } catch (error) {
+        console.error(error);
+    }
+}
+*/
 //hay que añadir las rutas y objetivo que salga el nombre del usuario 

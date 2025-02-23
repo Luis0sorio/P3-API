@@ -7,7 +7,7 @@ const rutas = require('./routes/rutas.js');
 
 const PORT = process.env.PORT;
 const app = express();
-
+app.use(express.json());
 
 // Implementacion de middlewares
 // Funciones que permiten analizar, validar, registrar y modificar solicitudes
@@ -35,6 +35,10 @@ app.get('/registro/registro.html', (req, res) => {
 
 app.get('/login/login.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'views', 'login', 'login.html'));
+});
+
+app.get('/Principal/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'views', 'Principal', 'index.html'));
 });
 
 app.listen(PORT, () => {
