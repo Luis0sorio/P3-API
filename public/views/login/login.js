@@ -33,7 +33,7 @@ window.onload = function(){
     const inputUsuario = document.createElement("input");
     inputUsuario.setAttribute("type","text");
     inputUsuario.setAttribute("placeholder","Usuario");
-    inputUsuario.setAttribute("id","Usuario");
+    inputUsuario.setAttribute("id","usuario");
     inputUsuario.classList.add("form-control","mb-3","form-control-sm","w-100","rounded-pill");
     
     

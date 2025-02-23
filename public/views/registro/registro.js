@@ -285,6 +285,7 @@ window.onload = function(){
         };
         registro(usuarioR);
 
+        // AQUÍ VA EL FETCH
     });
     
     //falta mostrar el error al usuario.
