@@ -3,9 +3,9 @@
 // Si el usuario está autenticado, lo guardamos
 // Si no existe, seguimos en la ventana del login
 const nombreUsuario = localStorage.getItem('nombreUsuario');
-if (!nombreUsuario) {
-    window.location.href = '/login/login.html';
-}
+// if (!nombreUsuario) {
+//     window.location.href = '/login/login.html';
+// }
 
 // Localizar el body
 const body = document.querySelector("body");
@@ -102,3 +102,10 @@ async function datos(nombreU) {
 }
 */
 //hay que añadir las rutas y objetivo que salga el nombre del usuario 
+
+// Creamos un enlace para redirigir a la ventana de perfil de usuario
+const perfilUser = document.createElement('a');
+perfilUser.setAttribute('href', '/views/perfil/perfil.html');
+perfilUser.textContent = "Editar perfil"
+perfilUser.setAttribute('target', '_blank'); // hay que cambiar esto
+document.body.appendChild(perfilUser);

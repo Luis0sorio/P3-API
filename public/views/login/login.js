@@ -142,7 +142,7 @@ window.onload = function(){
            console.log("yasta echo",data);
            errores(null);//llamamos otra vez a la función
            localStorage.setItem("nombreUser", usuario.usuario);//guardamos el nombre del usuario
-           window.location.href="/Principal/index.html";//redirigimos
+           window.location.href="/principal/index.html";//redirigimos
         } catch (error) {
             errores(error);//llamamos a la funcion y le pasamos el error
         }

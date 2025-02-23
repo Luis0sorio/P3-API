@@ -304,6 +304,7 @@ window.onload = function(){
             const data = await response.json();
             console.log("Respuesta recibida ",data);
             form.reset();//si todo esta ok, reseteamos el formulario
+            window.location.href = "/login/login.html";
         } catch (error) {
             console.error(error);
         }
