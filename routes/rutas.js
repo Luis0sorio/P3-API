@@ -10,5 +10,9 @@ const rutas = express.Router();
 rutas.post('/insercionUsuario', controladorUsuario.addNuevoUsuario);
 // llamamos a la funcion que maneja la validacion de inicio de sesión
 rutas.post('/login', controladorUsuario.verificarLogin);
+// usamos una ruta parametrizada y llamamos a la funcion correspondiente
+rutas.get('usuario/:usuario', controladorUsuario.obtenerDatosUsuario);
+// modificamos los datos del usuario
+rutas.put('', controladorUsuario.modificarUsuario);
 
 module.exports = rutas;
