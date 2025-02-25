@@ -1,3 +1,13 @@
+
+// Recuperamos el usuario en el localStorage
+// Si el usuario está autenticado, lo guardamos
+// Si no existe, seguimos en la ventana del login
+const nombreUsuario = localStorage.getItem('nombreUsuario');
+// if (!nombreUsuario) {
+//     window.location.href = '/login/login.html';
+// }
+
+// Localizar el body
 //Inicializacion del mapa y elementos del index.html
 let map;
 const body = document.querySelector("body");
@@ -21,6 +31,15 @@ function agregarTituloUsuario() {
     header.appendChild(h2);
     body.appendChild(header);
 }
+// Añadir el nombre del usuario en el header
+const h2 = document.createElement("h2");
+h2.setAttribute("id", "titulo");
+
+let nombreU=localStorage.getItem("nombreUser");//accedemos al nombre del usuario
+
+h2.textContent = `Hola ${nombreU}`;//personalizamos el saludo
+header.appendChild(h2);
+body.appendChild(header);
 
 //funcion para configurar el mapa y el buscador 
 function agregarMapayBusqueda() {
@@ -207,3 +226,34 @@ window.onload = function() {
     initMapa();
     obtenerDatosTickmaster();
 }
+
+
+//funcion para obtener los datos del usuario
+/*
+async function datos(nombreU) {
+    try {
+        const response=await fetch('http://localhost:3000/api/datosUsuario',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(nombreU)
+        });
+        if (!response.ok) {
+            throw new Error(`Error en la petición: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Respuesta recibida ",data);
+    } catch (error) {
+        console.error(error);
+    }
+}
+*/
+//hay que añadir las rutas y objetivo que salga el nombre del usuario 
+
+// Creamos un enlace para redirigir a la ventana de perfil de usuario
+const perfilUser = document.createElement('a');
+perfilUser.setAttribute('href', '/views/perfil/perfil.html');
+perfilUser.textContent = "Editar perfil"
+perfilUser.setAttribute('target', '_blank'); // hay que cambiar esto
+document.body.appendChild(perfilUser);
