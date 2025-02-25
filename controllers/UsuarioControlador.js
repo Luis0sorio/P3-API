@@ -69,7 +69,7 @@ const verificarLogin = async (req, res) => {
       return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
     }
 
-    const verificarPassword = await bcrypt.compare(password, usuarioExistente.password);
+    const verificarPassword = await bcrypt.compare(password, verificarUsuario.password);
     if (!verificarPassword) {
       return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
     }
@@ -80,8 +80,74 @@ const verificarLogin = async (req, res) => {
     console.error("Error en el inicio de sesión: ", error);
   }
 }
-// Exportamos las funciones para usarlas en el proyecto
+
+// Funcion que obtiene los datos del usuario logeado 
+const obtenerDatosUsuario = async (req, res) => {
+  try {
+    // Recuperamos el usuario de la solicitud
+    const usuario = req.params.usuario;
+    // Busca en la base de datos un usuario con el nombre proporcionado
+    const usuarioExiste = await Usuario.findOne({usuario});
+    // Si no existe, mostramos un mensaje de error
+    if (!usuarioExiste) {
+      return res.status(404).json({mensaje : "Usuario no encontrado."});
+    }
+    // Si existe, devuelve la información
+    res.status(200).json({
+      usuario: usuarioExiste.usuario,
+      email: usuarioExiste.email,
+    });
+  } catch (error) {
+    console.error("Error al obtener los datos del usuario:", error);
+    res.status(500).json({ mensaje: "Error interno del servidor" });
+  }
+}
+
+// Función para modificar los datos de un usuario
+const modificarUsuario = async (req, res) => {
+  try {
+    // Extrae los datos del formulario
+    const { usuario, email, password } = req.body;
+
+    // Verifica que los campos usuario y email tengan valores
+    if (!usuario || !email) {
+      return res.status(400).json({ mensaje: "Usuario y email son obligatorios" });
+    }
+
+    // Busca en la base de datos el usuario
+    const usuarioExiste = await Usuario.findOne({ usuario });
+
+    // Si el usuario no existe, muestra un mensaje de error
+    if (!usuarioExiste) {
+      return res.status(404).json({ mensaje: "Usuario no encontrado" });
+    }
+
+    // Actualiza el email del usuario
+    usuarioExiste.email = email;
+
+    // Para la nueva contraseña, también se encripta
+    if (password) {
+      const passwordHash = await bcrypt.hash(password, 10);
+      usuarioExiste.password = passwordHash;
+    }
+
+    // Guarda los cambios en la base de datos
+    await usuarioExiste.save();
+
+    // Responde con un mensaje de éxito
+    res.status(200).json({ mensaje: "Perfil actualizado con éxito" });
+
+  } catch (error) {
+    console.error("Error al modificar el usuario.", error);
+    res.status(500).json({ mensaje: "Error del servidor." });
+  }
+};
+
+
+// Exportamos las funciones para ser utilizadas en otros archivos del proyecto:
 module.exports = {
   addNuevoUsuario,
-  verificarLogin
+  verificarLogin,
+  obtenerDatosUsuario,
+  modificarUsuario,
 };

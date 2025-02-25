@@ -133,122 +133,12 @@ function configurarMapa() {
     map.addControl(navControl, 'bottom-right');
 
     map.on('load', () => {
-        document.getElementById('mapa').style.height = '90vh';
-        document.getElementById('mapa').style.width = '50%';
-        map.resize();
-    });
-
-    window.addEventListener('resize', () => map.resize());
-}
-
-//Configurar el buscador
-
-function configurarBuscador() {
-    const geocoder = new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken,
-        mapboxgl: mapboxgl
-    });
-
-    document.getElementById('busqueda').appendChild(geocoder.onAdd(map));
-
-    geocoder.on('result', (e) => {
-        const { center } = e.result.geometry;
-        map.flyTo({
-            center: center,
-            zoom: 12
-        });
+        document.getElementById('mapa').style.height = '500px';
+        document.getElementById('mapa').style.width = '100%';
     });
 }
 
-//obtener y mostrar eventos de la api de tickmaster
 
-function obtenerDatosTickmaster() {
-    const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
-    fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&size=200`)
-        .then(response => response.json())
-        .then(data => mostrarEventos(data._embedded.events))
-        .catch(error => console.log('Error al obtener los eventos:', error));
-}
-
-
-//mostrar datos de tickmaster
-
-function mostrarEventos(eventos) {
-    const listaEventos = document.createElement("ul");
-
-    eventos.forEach(evento => {
-        const li = document.createElement("li");
-        const tipo_event = obtenerTipoEvento(evento);
-
-        //aqui obtengo la imgen y si no exite usamos una predeterminada
-        const imagentick = evento.images && evento.images[0] ? evento.images[0].url : 'default-image.jpg';
-
-        //li.textContent = `${evento.name} - ${evento.dates.start.localDate} - ${evento.dates.start.localTime} - ${evento._embedded.venues[0].name} - ${evento._embedded.venues[0].city.name} - ${evento._embedded.venues[0].country.name} - ${tipo_event}`;
-
-        li.innerHTML = `
-        <div class= "evento-info">
-        <img src="${imagentick}" alt="${evento.name} class "evento-imagen">
-        <p><strong>${evento.name}</strong></p>
-        <p>${evento.dates.start.localDate} - ${evento.dates.start.localTime}</p>
-        <p>${evento._embedded.venues[0].name} - ${evento._embedded.venues[0].city.name} - ${evento._embedded.venues[0].country.name}</p> 
-        <a href="${evento.url}" target="_blank" class="comprar-entradas">Comprar Entradas </a>
-        </div>
-        `
-        
-
-        // const enlace = document.createElement("a");
-        // enlace.href = evento.url;
-        // enlace.textContent = "Comprar Entradas";
-        // enlace.target = "_blank";
-
-        // li.appendChild(enlace);
-        listaEventos.appendChild(li);
-    });
-
-    document.getElementById("datos").appendChild(listaEventos);
-
-}
-
-//funcion para obtener los tipos de eventos de tickmaster
-
-function obtenerTipoEvento(evento) {
-    return evento.classifications && evento.classifications[0] ? evento.classifications[0].segment.name : "Desconocido";
-}
-
-//funcion para crear el estilo de la lista del contenido de datos 
-
-function estiloDato() {
-    
-}
-
-//llamada a window onload que carga las funciones 
-window.onload = function() {
-    initMapa();
-    obtenerDatosTickmaster();
-}
-
-
-//funcion para obtener los datos del usuario
-/*
-async function datos(nombreU) {
-    try {
-        const response=await fetch('http://localhost:3000/api/datosUsuario',{
-            method:'POST',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(nombreU)
-        });
-        if (!response.ok) {
-            throw new Error(`Error en la petición: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Respuesta recibida ",data);
-    } catch (error) {
-        console.error(error);
-    }
-}
-*/
 //hay que añadir las rutas y objetivo que salga el nombre del usuario 
 
 // Creamos un enlace para redirigir a la ventana de perfil de usuario

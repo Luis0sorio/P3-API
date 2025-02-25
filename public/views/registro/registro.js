@@ -273,8 +273,40 @@ window.onload = function(){
             alert("Todos los campos son obligatorios");
             return;
         }
-        form.reset();
+        let usuarioR={
+            nombre: name,     
+            apellido1: apell1,
+            apellido2: apell2,
+            pais:pais,
+            ciudad:ciudad,
+            email:email,
+            usuario:usuario,
+            password:password
+        };
+        registro(usuarioR);
 
+        // AQUÍ VA EL FETCH
     });
     
+    //falta mostrar el error al usuario.
+    async function registro(usuarioR) {
+        try {
+            const response=await fetch('http://localhost:3000/api/insercionUsuario',{
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(usuarioR)
+            });
+            if (!response.ok) {
+                throw new Error(`Error en la petición: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("Respuesta recibida ",data);
+            form.reset();//si todo esta ok, reseteamos el formulario
+            window.location.href = "/login/login.html";
+        } catch (error) {
+            console.error(error);
+        }
+    }
 };
