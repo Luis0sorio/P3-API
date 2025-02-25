@@ -8,14 +8,29 @@ const nombreUsuario = localStorage.getItem('nombreUsuario');
 // }
 
 // Localizar el body
+//Inicializacion del mapa y elementos del index.html
+let map;
 const body = document.querySelector("body");
-
-// Localizar el header
 const header = document.querySelector("header");
-
-// Localizar head
+const main = document.querySelector("main");
 const head = document.querySelector("head");
 
+//funcion para inicializar la configuracion del mapa
+
+function initMapa(){
+    agregarTituloUsuario();
+    agregarMapayBusqueda();
+    cargarMapbox();
+}
+
+//añadir titulo del usuario en el header
+function agregarTituloUsuario() {
+    const h2 = document.createElement("h2");
+    h2.setAttribute("id","titulo");
+    h2.textContent = "Hola Usuario";
+    header.appendChild(h2);
+    body.appendChild(header);
+}
 // Añadir el nombre del usuario en el header
 const h2 = document.createElement("h2");
 h2.setAttribute("id", "titulo");
@@ -26,81 +41,104 @@ h2.textContent = `Hola ${nombreU}`;//personalizamos el saludo
 header.appendChild(h2);
 body.appendChild(header);
 
-// Localizar el main para agregar posteriormente el div que contendra el mapa
-const main = document.querySelector("main");
+//funcion para configurar el mapa y el buscador 
+function agregarMapayBusqueda() {
 
-// Añadir divTodo
-const divTodo = document.createElement("div");
-divTodo.setAttribute("id", "divtodo");
-// Temporal
-divTodo.textContent = "Hola";
+    const divTodo = document.createElement("div");
+    divTodo.setAttribute("id","divTodo");
 
-// Añadir divMapa
-const divMapa = document.createElement("div");
-divMapa.setAttribute("id", "mapa");
+    const row = document.createElement("div");
+    row.classList.add("row");
+
+    const divMapa = crearDivMapa();
+    const divDatos = crearDivDatos();
+    
+    const divBusqueda = crearDivBusqueda();
+    divMapa.appendChild(divBusqueda);
+
+    row.appendChild(divDatos);
+    row.appendChild(divMapa);
+
+    divTodo.appendChild(row);
+    main.appendChild(divTodo);
+    body.appendChild(main);
+
+}
+
+//crear div para el mapa
+function crearDivMapa() {
+    const divMapa = document.createElement("div");
+    divMapa.setAttribute("id","mapa");
+    divMapa.classList.add("col-md-6");
+    return divMapa;
+}
+
+//crear div para los datos
+function crearDivDatos() {
+    const divDatos = document.createElement("div");
+    divDatos.setAttribute("id","datos");
+    divDatos.classList.add("col-md-6");
+    return divDatos;
+}
+
+//crear el div de busqueda
+function crearDivBusqueda() {
+    const divBusqueda = document.createElement("div");
+    divBusqueda.setAttribute("id","busqueda");
+    return divBusqueda;
+}
+
+//cargar los archivos para el MapBox
+
+function cargarMapbox(){
+    const linkcss = document.createElement("link");
+    linkcss.setAttribute("href","https://api.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.css");
+    linkcss.setAttribute("rel","stylesheet");
+    head.appendChild(linkcss);
+
+    const scriptMapa = document.createElement("script");
+    scriptMapa.setAttribute("src","https://api.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.js");
+    scriptMapa.onload = function() {
+        cargarBuscador();
+        configurarMapa();
+    };
+    body.appendChild(scriptMapa);
 
 
-// Añadir divDatos
-const divDatos = document.createElement("div");
-divDatos.setAttribute("id", "datos");
+}
 
-divTodo.appendChild(divDatos);
-divTodo.appendChild(divMapa);
 
-main.appendChild(divTodo);
-body.appendChild(main);
+//funcion para cargar el buscador
+function cargarBuscador() {
+    const searchmap = document.createElement("script");
+    searchmap.setAttribute("src", "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js");
+    searchmap.onload = function () {
+        configurarBuscador();
+    };
+    body.appendChild(searchmap);
+}
 
-// Crear los links 
-const linkcss = document.createElement("link");
-linkcss.setAttribute("href", "https://api.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.css");
-linkcss.setAttribute("rel", "stylesheet");
-head.appendChild(linkcss);  // Usar appendChild en el head
+//Configurar el mapa
 
-// Crear el script y agregarlo al body
-const scriptMapa = document.createElement("script");
-scriptMapa.setAttribute("src", "https://api.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.js");
-scriptMapa.onload = function() {
-    // Llamar la función para cargar el mapa después de que Mapbox se haya cargado
-    cargarMapa();
-};
-body.appendChild(scriptMapa); // Agregar el script al body
-
-// Crear la función cargarMapa
-function cargarMapa() {
+function configurarMapa() {
     mapboxgl.accessToken = 'pk.eyJ1IjoibWFpazEyNCIsImEiOiJjbTcwczVmeGowNGpsMmpzbmlybmpuajByIn0.s2p0IIfjzS1fGa52vRd4iQ';
-    const map = new mapboxgl.Map({
-        container: 'mapa', // ID del div donde se mostrará el mapa
-        style: 'mapbox://styles/mapbox/streets-v11', // Estilo del mapa
-        center: [-74.5, 40], // Coordenadas iniciales [longitud, latitud]
-        zoom: 9 // Nivel de zoom inicial
+    map = new mapboxgl.Map({
+        container: 'mapa',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [-74.5, 40],
+        zoom: 9
     });
+
+    const navControl = new mapboxgl.NavigationControl();
+    map.addControl(navControl, 'bottom-right');
 
     map.on('load', () => {
         document.getElementById('mapa').style.height = '500px';
         document.getElementById('mapa').style.width = '100%';
     });
 }
-//funcion para obtener los datos del usuario
-/*
-async function datos(nombreU) {
-    try {
-        const response=await fetch('http://localhost:3000/api/datosUsuario',{
-            method:'POST',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(nombreU)
-        });
-        if (!response.ok) {
-            throw new Error(`Error en la petición: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Respuesta recibida ",data);
-    } catch (error) {
-        console.error(error);
-    }
-}
-*/
+
+
 //hay que añadir las rutas y objetivo que salga el nombre del usuario 
 
 // Creamos un enlace para redirigir a la ventana de perfil de usuario

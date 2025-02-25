@@ -1,0 +1,101 @@
+/*Estilos para el contenedor principal */
+#divTodo {
+    margin-top: 100px;
+}
+
+/* Estilo para el mapa */
+#mapa{
+    border-radius: 20px;
+    height: 90vh;
+    width: 50%;
+}
+
+/*Estilo para los datos*/
+#datos {
+    height: 90vh;
+    overflow-y: scroll;
+    padding-right: 10px;
+}
+
+/*Estilo para el buscador*/
+#busqueda {
+    position: absolute;
+    z-index: 1;
+    top: 10px;
+    left: 10px;
+    width: 300px;
+}
+
+
+/*apartado para los li de los eventos - datos */
+
+/* Estilo general para el contenedor de los eventos */
+
+#datos ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.evento-info {
+    display: flex;
+    align-items: center; /* Coloca la imagen y la información en línea */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin: 10px;
+    background-color: #fff;
+    width: 100%;
+    list-style: none; /* Elimina el punto de la lista */
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Estilo para la imagen del evento, con tamaño uniforme */
+.evento-imagen {
+    width: 50px; /* Tamaño reducido y uniforme para todas las imágenes */
+    height: 50px;
+    border-radius: 8px;
+    margin-right: 15px; /* Espaciado entre la imagen y el texto */
+}
+
+/* Estilo para el nombre del evento */
+.evento-info p strong {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* Estilo para la fecha del evento */
+.evento-info p {
+    font-size: 14px;
+    color: #777;
+    margin: 5px 0;
+}
+
+/* Estilo para el botón de compra de entradas */
+.comprar-entradas {
+    text-decoration: none;
+    background-color: #1a73e8;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.comprar-entradas:hover {
+    background-color: #1558b0;
+}
+
+/* Efecto al pasar el ratón sobre el contenedor del evento */
+.evento-info:hover {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+img {
+    width: 50px;
+    height: 50px;
+}
