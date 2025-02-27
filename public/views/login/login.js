@@ -71,6 +71,20 @@ function createLink(href, text) {
     return link;
 }
 
+
+function errores(error=null) {
+    if(error!=null){//si hay error , se muestra
+        err.textContent = error; 
+    } else{
+        err.textContent = "";//vaciamos el contenedor
+    }
+}
+
+//mensaje error
+const err = document.createElement("label");
+err.setAttribute("for","error");
+err.classList.add("form-label");
+
 // Llamada a window.onload para ejecutar el codigo
 window.onload = function () {
     // Crear el contenedor principal
@@ -110,12 +124,62 @@ window.onload = function () {
     form.appendChild(btnLogin);
     form.appendChild(link);
 
+    //Creo el contenedor para mostrar los errores
+    const divError = document.createElement("div");
+    divError.setAttribute("id","divErr");
+    divError.appendChild(err);
+    
+    //agrego el div de error al formulario
+    form.appendChild(divError);
+
     // Agregar el formulario al contenedor principal
     divForm.appendChild(form);
 
     // Agregar el formulario al main
     document.querySelector("main").appendChild(divForm);
+
+    btnLogin.addEventListener('click',function(event){//añadimos un evento al boton de inicio
+        event.preventDefault();
+        console.log("Botón de login presionado");
+        let usuario={
+            usuario:inputUsuario.value,
+            password:inputPassword.value
+        }
+        console.log(usuario);
+        inicioSesion(usuario);
+    });
+    
 };
+//forma diferente del fetch al registro,con una funcion general
+async function peticion(url,headers={}) {//recibe la url y la cabecera 
+    try {
+        const response=await fetch(url,headers);//hacemos la peticion cn lo recibido
+        const data = await response.json();//respuesta
+        if (!response.ok) {//si la respuesta no es ok
+            throw new Error(data.mensaje); 
+        }
+        console.log("Respuesta recibida bien  ",data);
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error; //lanzamos el error para q se maneje donde llamen a la funcion
+    }
+}
 
-
-//falta fetch de SALMA 
+async function inicioSesion(usuario) {
+    try {
+        const data=await peticion('http://localhost:3000/api/login',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(usuario)
+        });
+       console.log("yasta echo",data);
+       errores(null);//llamamos otra vez a la función
+       localStorage.setItem("nombreUser", usuario.usuario);//guardamos el nombre del usuario
+       window.location.href="/principal/index.html";//redirigimos
+    } catch (error) {
+        errores(error);//llamamos a la funcion y le pasamos el error
+    }
+}
