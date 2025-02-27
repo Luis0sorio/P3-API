@@ -78,6 +78,7 @@ const verificarLogin = async (req, res) => {
     
   } catch (error) {
     console.error("Error en el inicio de sesión: ", error);
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 }
 
@@ -107,25 +108,42 @@ const obtenerDatosUsuario = async (req, res) => {
 const modificarUsuario = async (req, res) => {
   try {
     // Extrae los datos del formulario
-    const { usuario, email, password } = req.body;
+    const { usuarioForm, usuario, email, password } = req.body;
 
-    // Verifica que los campos usuario y email tengan valores
-    if (!usuario || !email) {
-      return res.status(400).json({ mensaje: "Usuario y email son obligatorios" });
+    // Verifica que al menos un campo tenga un valor
+    if (!usuario && !email && !password) {
+      return res.status(400).json({ mensaje: "Complete el campo que desea modificar" });
     }
 
     // Busca en la base de datos el usuario
-    const usuarioExiste = await Usuario.findOne({ usuario });
+    const usuarioExiste = await Usuario.findOne({ usuario: usuarioForm }); // Asegúrate de enviar el usuario original desde el frontend
 
     // Si el usuario no existe, muestra un mensaje de error
     if (!usuarioExiste) {
       return res.status(404).json({ mensaje: "Usuario no encontrado" });
     }
 
-    // Actualiza el email del usuario
-    usuarioExiste.email = email;
+    // Actualiza el usuario si se proporciona un nuevo valor
+    if (usuario) {
+      // Verifica si el nuevo usuario ya existe
+      const usuarioNuevoExiste = await Usuario.findOne({ usuario });
+      if (usuarioNuevoExiste) {
+        return res.status(400).json({ mensaje: "El nombre de usuario no está disponible." });
+      }
+      usuarioExiste.usuario = usuario;
+    }
 
-    // Para la nueva contraseña, también se encripta
+    // Actualiza el email si se proporciona un nuevo valor
+    if (email) {
+      // Verifica si el nuevo email ya existe
+      const emailExiste = await Usuario.findOne({ email });
+      if (emailExiste && emailExiste.usuario !== usuarioExiste.usuario) {
+        return res.status(400).json({ mensaje: "Este email ya ha sido registrado." });
+      }
+      usuarioExiste.email = email;
+    }
+
+    // Actualiza la contraseña si se proporciona un nuevo valor
     if (password) {
       const passwordHash = await bcrypt.hash(password, 10);
       usuarioExiste.password = passwordHash;
