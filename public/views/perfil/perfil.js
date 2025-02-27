@@ -1,6 +1,6 @@
 window.onload = function () {
   // Verificamos si el usuario está autenticado
-  const usuario = localStorage.getItem("usuario");
+  const usuario = localStorage.getItem("nombreUser");
 
   document.getElementById("titulo").textContent = `Perfil de ${usuario}`;
 
@@ -9,6 +9,7 @@ window.onload = function () {
   // Cargamos los datos del usuario
   cargarDatosUsuario(usuario);
 
+  // Evento que envía el formulario de modificacion del usuario
   formPerfil.addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -16,20 +17,42 @@ window.onload = function () {
     const usuario = document.getElementById('usuario').value.trim();
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
+    const confirmPassword = document.getElementById('confirmPassword').value.trim();
 
-    // Validamos los campos
-    if (!usuario || !email || !password) {
-      alert("Usuario y email son obligatorios");
+    // Validamos que las contraseñas coincidan
+    if (password && password !== confirmPassword) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    // Verificamos si algún campo ha sido modificado
+    const usuarioForm = localStorage.getItem('nombreUser');
+    const emailForm = localStorage.getItem('email');
+
+    if (usuario === usuarioForm && email === emailForm && !password) {
+      alert("No se han realizado cambios en el perfil");
       return;
     }
 
     // Creamos el objeto con los datos actualizados
     const datosActualizados = {
-      usuario,
-      email,
-      password: password || undefined, 
+      usuarioForm, // busca el usuario actual
+      /*
+      usuario: usuario || undefined,
+      email: email || undefined,
+      password: password || undefined, */
     };
 
+    // Agregamos los campos que se han modificado
+    if (usuario && usuario !== usuarioForm) {
+      datosActualizados.usuario = usuario;
+    }
+    if (email && email !== emailForm) {
+      datosActualizados.email = email;
+    }
+    if (password) {
+      datosActualizados.password = password;
+    }
     try {
       // Enviar los datos actualizados al backend
       const respuesta = await fetch("/api/usuario", {
@@ -42,8 +65,8 @@ window.onload = function () {
 
       if (respuesta.ok) {
         alert("Perfil actualizado con éxito");
-        if (usuario !== localStorage.getItem('usuario')) {
-          localStorage.setItem('usuario', usuario);
+        if (usuario && usuario !== usuarioForm) {
+          localStorage.setItem('nombreUser', usuario);
           document.getElementById("titulo").textContent = `Perfil de ${usuario}`;
         }
       } else {
@@ -60,14 +83,14 @@ window.onload = function () {
   async function cargarDatosUsuario(usuario) {
     try {
       // hacemos una solicitud GET al backend para obtener los datos del usuario
-      const respuesta = await fetch(`/api/usuario/${usuario}`);
-      if (respuesta.ok) {
-        const data = await respuesta.json();
+      const solicitud = await fetch(`/api/usuario/${usuario}`);
+      if (solicitud.ok) {
+        const dataUsuario = await solicitud.json();
         // Rellenamos el formulario con los datos actuales
-        document.getElementById('usuario').value = data.usuario;
-        document.getElementById('email').value = data.email;
+        document.getElementById('usuario').value = dataUsuario.usuario;
+        document.getElementById('email').value = dataUsuario.email;
       } else {
-        const error = await respuesta.json();
+        const error = await solicitud.json();
         alert(`Error: ${error.mensaje}`);
       }
     } catch (error) {

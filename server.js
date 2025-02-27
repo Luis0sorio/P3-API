@@ -41,8 +41,8 @@ app.get('/principal/index.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'views', 'principal', 'index.html'));
 });
 // La aplicación carga el perfil del usuario desde el principal
-app.get('', (req, res) => {
-// carga el perfil del usuario sin problema. Hay que hacer que cargue desde aquí. 
+app.get('/perfil/perfil.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'views', 'perfil', 'perfil.html'));
 });
 
 // La consola muestra información del puerto en el que escucha la aplicación
