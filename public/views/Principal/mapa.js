@@ -27,19 +27,21 @@ function initMapa(){
 function agregarTituloUsuario() {
     const h2 = document.createElement("h2");
     h2.setAttribute("id","titulo");
-    h2.textContent = "Hola Usuario";
+    h2.textContent = `Hola ${nombreUsuario}`;
     header.appendChild(h2);
     body.appendChild(header);
 }
-// Añadir el nombre del usuario en el header
-const h2 = document.createElement("h2");
-h2.setAttribute("id", "titulo");
 
-let nombreU=localStorage.getItem("nombreUser");//accedemos al nombre del usuario
 
-h2.textContent = `Hola ${nombreU}`;//personalizamos el saludo
-header.appendChild(h2);
-body.appendChild(header);
+// // Añadir el nombre del usuario en el header
+// const h2 = document.createElement("h2");
+// h2.setAttribute("id", "titulo");
+
+// let nombreU=localStorage.getItem("nombreUser");//accedemos al nombre del usuario
+
+// h2.textContent = `Hola ${nombreU}`;//personalizamos el saludo
+// header.appendChild(h2);
+// body.appendChild(header);
 
 //funcion para configurar el mapa y el buscador 
 function agregarMapayBusqueda() {
@@ -133,13 +135,18 @@ function configurarMapa() {
     map.addControl(navControl, 'bottom-right');
 
     map.on('load', () => {
-        document.getElementById('mapa').style.height = '500px';
-        document.getElementById('mapa').style.width = '100%';
+        document.getElementById('mapa').style.height = '90vh';
+        document.getElementById('mapa').style.width = '50%';
+        map.resize();
     });
+
+    window.addEventListener('resize', () => map.resize());
 }
 
 
 //hay que añadir las rutas y objetivo que salga el nombre del usuario 
+
+//METER ESTO EN UNA FUNCION
 
 // Creamos un enlace para redirigir a la ventana de perfil de usuario
 const perfilUser = document.createElement('a');
@@ -147,3 +154,89 @@ perfilUser.setAttribute('href', '/views/perfil/perfil.html');
 perfilUser.textContent = "Editar perfil"
 perfilUser.setAttribute('target', '_blank'); // hay que cambiar esto
 document.body.appendChild(perfilUser);
+
+
+///// Esto es nuevo 
+//Configurar el buscador
+
+function configurarBuscador() {
+    const geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl
+    });
+
+    document.getElementById('busqueda').appendChild(geocoder.onAdd(map));
+
+    geocoder.on('result', (e) => {
+        const { center } = e.result.geometry;
+        map.flyTo({
+            center: center,
+            zoom: 12
+        });
+    });
+}
+
+//obtener y mostrar eventos de la api de tickmaster
+
+function obtenerDatosTickmaster() {
+    const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
+    fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&size=200`)
+        .then(response => response.json())
+        .then(data => mostrarEventos(data._embedded.events))
+        .catch(error => console.log('Error al obtener los eventos:', error));
+}
+
+
+//mostrar datos de tickmaster
+
+function mostrarEventos(eventos) {
+    const listaEventos = document.createElement("ul");
+
+    eventos.forEach(evento => {
+        const li = document.createElement("li");
+        const tipo_event = obtenerTipoEvento(evento);
+
+        //aqui obtengo la imgen y si no exite usamos una predeterminada
+        const imagentick = evento.images && evento.images[0] ? evento.images[0].url : 'default-image.jpg';
+
+        //li.textContent = `${evento.name} - ${evento.dates.start.localDate} - ${evento.dates.start.localTime} - ${evento._embedded.venues[0].name} - ${evento._embedded.venues[0].city.name} - ${evento._embedded.venues[0].country.name} - ${tipo_event}`;
+
+        li.innerHTML = `
+        <div class= "evento-info">
+        <img src="${imagentick}" alt="${evento.name} class "evento-imagen">
+        <p><strong>${evento.name}</strong></p>
+        <p>${evento.dates.start.localDate} - ${evento.dates.start.localTime}</p>
+        <p>${evento._embedded.venues[0].name} - ${evento._embedded.venues[0].city.name} - ${evento._embedded.venues[0].country.name}</p> 
+        <a href="${evento.url}" target="_blank" class="comprar-entradas">Comprar Entradas </a>
+        </div>
+        `
+        
+
+        // const enlace = document.createElement("a");
+        // enlace.href = evento.url;
+        // enlace.textContent = "Comprar Entradas";
+        // enlace.target = "_blank";
+
+        // li.appendChild(enlace);
+        listaEventos.appendChild(li);
+    });
+
+    document.getElementById("datos").appendChild(listaEventos);
+
+}
+
+//funcion para obtener los tipos de eventos de tickmaster
+
+function obtenerTipoEvento(evento) {
+    return evento.classifications && evento.classifications[0] ? evento.classifications[0].segment.name : "Desconocido";
+}
+
+//funcion para crear el estilo de la lista del contenido de datos 
+
+
+
+//llamada a window onload que carga las funciones 
+window.onload = function() {
+    initMapa();
+    obtenerDatosTickmaster();
+}
