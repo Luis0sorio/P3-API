@@ -1,7 +1,7 @@
 // Recuperamos el usuario en el localStorage
 // Si el usuario está autenticado, lo guardamos
 // Si no existe, seguimos en la ventana del login
-const nombreUsuario = localStorage.getItem('nombreUser');
+const nombreUsuario = localStorage.getItem("nombreUser");
 // if (!nombreUsuario) {
 //     window.location.href = '/login/login.html';
 // }
@@ -16,58 +16,52 @@ const head = document.querySelector("head");
 
 //funcion para inicializar la configuracion del mapa
 
-function initMapa(){
-    crearHeader();
-    agregarMapayBusqueda();
-    cargarMapbox();
-    //enlacePerfil();
+function initMapa() {
+  crearHeader();
+  agregarMapayBusqueda();
+  cargarMapbox();
 }
 
-function crearHeader(){
+function crearHeader() {
+  //titulo usuario
+  const h2 = document.createElement("h2");
+  h2.setAttribute("id", "titulo");
+  h2.textContent = `Hola ${nombreUsuario}`;
+  header.appendChild(h2);
 
+  const datosli = [
+    { name: "Editar Perfil", link: "/views/perfil/perfil.html", icon: "fas fa-cogs" },
+    { name: "Favoritos", link: "/views/favoritos/favoritos.html", icon: "fas fa-star" },
+    { name: "Cerrar Sesion", link: "/", icon: "fas fa-power-off" },
+  ];
 
-    //titulo usuario
-    const h2 = document.createElement("h2");
-    h2.setAttribute("id","titulo");
-    h2.textContent = `Hola ${nombreUsuario}`;
-    header.appendChild(h2);
+  const ul = document.createElement("ul");
+  ul.setAttribute("id", "ulNav");
 
-    const datosli = [
-        {name : 'Editar Perfil', link : '/views/perfil/perfil.html',icon : 'fas fa-cogs'},
-        {name : 'Favoritos', link : '#',icon : 'fas fa-star'},
-        {name : 'Cerrar Sesion', link : '#',icon : 'fas fa-power-off'}
-    ];
+  datosli.forEach((datosli) => {
+    const li = document.createElement("li");
+    li.setAttribute("id", "liNav");
+    const a = document.createElement("a");
+    a.setAttribute("id", "aNav");
+    a.textContent = datosli.name;
+    a.href = datosli.link;
 
-    const ul = document.createElement('ul');
-    ul.setAttribute('id','ulNav');
-    
-    datosli.forEach(datosli => {
-        const li = document.createElement('li');
-        li.setAttribute('id','liNav');
-        const a = document.createElement('a');
-        a.setAttribute('id','aNav');
-        a.textContent = datosli.name;
-        a.href = datosli.link;
+    if (datosli.icon) {
+      const icon = document.createElement("i");
+      icon.setAttribute("id", "icon");
+      icon.setAttribute("class", datosli.icon);
+      a.prepend(icon);
+    }
 
-        if (datosli.icon) {
-            const icon = document.createElement('i');
-            icon.setAttribute('id','icon');
-            icon.setAttribute('class',datosli.icon);
-            a.prepend(icon);
-        }
-        
-        li.appendChild(a);
-        ul.appendChild(li);
-    });
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
 
-    const divNav = document.createElement('div');
-    divNav.setAttribute('class','divNav');
-    divNav.appendChild(ul);
-    header.appendChild(divNav);
+  const divNav = document.createElement("div");
+  divNav.setAttribute("class", "divNav");
+  divNav.appendChild(ul);
+  header.appendChild(divNav);
 }
-
-
-
 
 // // Añadir el nombre del usuario en el header
 // const h2 = document.createElement("h2");
@@ -186,27 +180,27 @@ function configurarMapa() {
 
 //hay que añadir las rutas y objetivo que salga el nombre del usuario
 
-// Creamos un enlace para redirigir a la ventana de perfil de usuario
-// function enlacePerfil() {
-// 	const perfilUser = document.createElement("a");
-// 	perfilUser.setAttribute("href", "/views/perfil/perfil.html");
-// 	perfilUser.textContent = "Editar perfil";
-// 	document.body.appendChild(perfilUser);
-// }
+//METER ESTO EN UNA FUNCION
 
+// Creamos un enlace para redirigir a la ventana de perfil de usuario
+// const perfilUser = document.createElement('a');
+// perfilUser.setAttribute('href', '/views/perfil/perfil.html');
+// perfilUser.textContent = "Editar perfil"
+// perfilUser.setAttribute('target', '_blank'); // hay que cambiar esto
+// header.appendChild(perfilUser);
 
 ///// Esto es nuevo
 //Configurar el buscador
 
 function configurarBuscador() {
-    const geocoder = new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken,
-        mapboxgl: mapboxgl,
-        marker :true,
-        flyTo: true,
-        placeholder: "Buscar..",
-        limit: 5
-    });
+  const geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl,
+    marker: true,
+    flyTo: true,
+    placeholder: "Buscar..",
+    limit: 5,
+  });
 
   document.getElementById("busqueda").appendChild(geocoder.onAdd(map));
 
@@ -236,11 +230,11 @@ function obtenerDatosTickmaster() {
 function mostrarEventos(eventos) {
   const listaEventos = document.createElement("ul");
 
-    eventos.forEach(evento => {
-        const li = document.createElement("li");
+  eventos.forEach((evento) => {
+    const li = document.createElement("li");
 
-        //por usar para poder identificar el tipo de evento ej: Deportes,Musica,Teatro,etc..
-        const tipo_event = obtenerTipoEvento(evento);
+    //por usar para poder identificar el tipo de evento ej: Deportes,Musica,Teatro,etc..
+    const tipo_event = obtenerTipoEvento(evento);
 
     //aqui obtengo la imgen y si no exite usamos una predeterminada
     const imagentick =
@@ -266,7 +260,6 @@ function mostrarEventos(eventos) {
         <a href="${evento.url}" target="_blank" class="comprar-entradas">Comprar Entradas </a>
         </div>
         `;
-        
 
     // const enlace = document.createElement("a");
     // enlace.href = evento.url;
@@ -277,20 +270,20 @@ function mostrarEventos(eventos) {
     listaEventos.appendChild(li);
   });
 
+  document.getElementById("datos").appendChild(listaEventos);
 
-    const favoritos = document.querySelectorAll(".favorito");
-    favoritos.forEach(favorito => {
-        favorito.addEventListener("click",function () {
-            if (favorito.classList.contains("fa-star")) {
-                favorito.classList.remove("fa-star");
-                favorito.classList.add("fa-check");
-            } else {
-                favorito.classList.remove("fa-check");
-                favorito.classList.add("fa-star");
-            }
-        });
+  const favoritos = document.querySelectorAll(".favorito");
+  favoritos.forEach((favorito) => {
+    favorito.addEventListener("click", function () {
+      if (favorito.classList.contains("fa-star")) {
+        favorito.classList.remove("fa-star");
+        favorito.classList.add("fa-check");
+      } else {
+        favorito.classList.remove("fa-check");
+        favorito.classList.add("fa-star");
+      }
     });
-
+  });
 }
 
 //funcion para obtener los tipos de eventos de tickmaster
@@ -301,57 +294,8 @@ function obtenerTipoEvento(evento) {
     : "Desconocido";
 }
 
-async function cerrarSesion() {
-  const token = localStorage.getItem('token'); // Obtener el token del localStorage
-
-  if (!token) {
-    alert('No hay sesión activa');
-    return;
-  }
-
-  // *****  FETCH PARA SALMA *****
-  try {
-    // Hacer una solicitud al backend para cerrar sesión
-    const respuesta = await fetch('/api/auth/logout', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (respuesta.ok) {
-      // Eliminar el token del localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('nombreUser');
-
-      // Redirigir al usuario al login
-      window.location.href = '/login/login.html';
-    } else {
-      const error = await respuesta.json();
-      alert(`Error: ${error.mensaje}`);
-    }
-  } catch (error) {
-    console.error('Error al cerrar sesión:', error);
-    alert('Error al cerrar sesión');
-  }
-}
-
-function BotonCerrarSesion() {
-  const botonCerrarSesion = document.createElement('button');
-  botonCerrarSesion.textContent = 'Cerrar Sesión';
-  botonCerrarSesion.classList.add('btn', 'btn-danger', 'mt-3');
-  botonCerrarSesion.addEventListener('click', cerrarSesion);
-
-  // Agregar el botón al header
-  header.appendChild(botonCerrarSesion);
-}
-
-//funcion para crear el estilo de la lista del contenido de datos
-
 //llamada a window onload que carga las funciones
 window.onload = function () {
   initMapa();
   obtenerDatosTickmaster();
-  BotonCerrarSesion();
 };

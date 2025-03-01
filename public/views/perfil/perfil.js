@@ -2,6 +2,9 @@
 
 // Creamos el formulario de modificacion de usuario con el DOM
 function formPerfilUsuario() {
+  
+  const usuario = localStorage.getItem("nombreUser");
+  
   const div = document.createElement('div');
   div.classList.add('formulario-perfil');
 

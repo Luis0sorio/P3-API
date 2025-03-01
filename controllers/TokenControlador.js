@@ -9,6 +9,7 @@ const SECRETO = process.env.SECRETO;
 // Función para registrar un token en la lista negra
 const  agregarToken = async (token, expiracion) => {
   try {
+    console.log("Intentando guardar el token:", token);
     const tokenInvalido = new Token({ token, expiracion });
     await tokenInvalido.save();
     console.log('Token agregado a la lista negra.');
