@@ -179,6 +179,7 @@ async function peticion(url, headers = {}) {
   try {
     const response = await fetch(url, headers); //hacemos la peticion cn lo recibido
     const data = await response.json(); //respuesta
+    console.log("Respuesta del backend:", data);
     if (!response.ok) {
       //si la respuesta no es ok
       throw new Error(data.mensaje);
@@ -203,6 +204,7 @@ async function inicioSesion(usuario) {
     console.log("yasta echo", data);
     errores(null); //llamamos otra vez a la función
     localStorage.setItem("nombreUser", usuario.usuario); //guardamos el nombre del usuario
+    localStorage.setItem("token", data.token); // Guardamos el token en localStorage
     window.location.href = "/principal/index.html"; //redirigimos
   } catch (error) {
     errores(error); //llamamos a la funcion y le pasamos el error
