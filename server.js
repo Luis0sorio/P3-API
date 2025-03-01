@@ -40,10 +40,6 @@ app.get('/login/login.html', (req, res) => {
 app.get('/principal/index.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'views', 'principal', 'index.html'));
 });
-// La aplicación carga el perfil del usuario desde el principal
-app.get('/perfil/perfil.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'views', 'perfil', 'perfil.html'));
-});
 
 // La consola muestra información del puerto en el que escucha la aplicación
 app.listen(PORT, () => {

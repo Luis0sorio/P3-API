@@ -3,6 +3,11 @@
 const Usuario = require('../models/Usuario.js');
 // Importamos la libreria para hashear contraseñas
 const bcrypt = require('bcrypt');
+// Importamos la libreria JWT
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
+const SECRETO = process.env.SECRETO;
 
 // Definimos cuantas veces aplicar el algoritmo de encriptacion
 const saltRounds = 10;
@@ -74,7 +79,14 @@ const verificarLogin = async (req, res) => {
       return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
     }
 
-    res.status(200).json({ mensaje: "Éxito al iniciar sesión"});
+    // Implementamos el token JWT
+    const token = jwt.sign(
+      {id: verificarUsuario._id, usuario: verificarUsuario.usuario},
+      SECRETO,
+      {expiresIn: '1h'}
+    );
+
+    res.status(200).json({ mensaje: "Éxito al iniciar sesión", token});
     
   } catch (error) {
     console.error("Error en el inicio de sesión: ", error);
