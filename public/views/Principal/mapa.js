@@ -2,7 +2,10 @@
 // Recuperamos el usuario en el localStorage
 // Si el usuario está autenticado, lo guardamos
 // Si no existe, seguimos en la ventana del login
-const nombreUsuario = localStorage.getItem('nombreUsuario');
+let tipos=["Music", "Sports", "Theater", "Comedy", "Arts","Festivals","Musicals","Family"];
+
+const nombreUsuario = localStorage.getItem('nombreUser');
+console.log(nombreUsuario);
 // if (!nombreUsuario) {
 //     window.location.href = '/login/login.html';
 // }
@@ -19,6 +22,7 @@ const head = document.querySelector("head");
 
 function initMapa(){
     agregarTituloUsuario();
+    diviFil();
     agregarMapayBusqueda();
     cargarMapbox();
 }
@@ -90,6 +94,31 @@ function crearDivBusqueda() {
     return divBusqueda;
 }
 
+//div filtro y filtro
+function diviFil() {
+    const divFlitro = document.createElement("div");
+    divFlitro.setAttribute("id","filtro");
+    const select = document.createElement("select");
+    select.setAttribute("id","tpos");
+    select.setAttribute("name","tipos");
+
+    tipos.forEach(tipillos => {
+        let tipo=document.createElement("option");
+        tipo.textContent = tipillos;
+        tipo.setAttribute("value",tipillos);
+        select.appendChild(tipo);
+    });
+    select.selectedIndex = -1;
+    divFlitro.appendChild(select);
+    body.appendChild(divFlitro);
+
+    select.addEventListener("change", function() {
+        let tipoSeleccionado = select.value;
+        console.log("eleccionnnn", select.value);
+        obtenertipos(tipoSeleccionado); // Llama a la función con el tipo seleccionado
+    });
+}
+
 //cargar los archivos para el MapBox
 
 function cargarMapbox(){
@@ -105,7 +134,6 @@ function cargarMapbox(){
         configurarMapa();
     };
     body.appendChild(scriptMapa);
-
 
 }
 
@@ -162,7 +190,7 @@ document.body.appendChild(perfilUser);
 function configurarBuscador() {
     const geocoder = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
-        mapboxgl: mapboxgl
+        mapboxgl: mapboxgl,
     });
 
     document.getElementById('busqueda').appendChild(geocoder.onAdd(map));
@@ -177,21 +205,29 @@ function configurarBuscador() {
 }
 
 //obtener y mostrar eventos de la api de tickmaster
-
+//o usar geohash<<<<<<-------------
 function obtenerDatosTickmaster() {
     const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
-    fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&size=200`)
+    fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&city=Berlin&radius=10&size=50`)
         .then(response => response.json())
         .then(data => mostrarEventos(data._embedded.events))
         .catch(error => console.log('Error al obtener los eventos:', error));
 }
+///////////////////
 
-
-//mostrar datos de tickmaster
-
+function obtenertipos(tipo) {
+    const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
+    fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&classificationName=${tipo}&city=Berlin`)
+    .then(response => response.json())
+    .then(data => {
+        console.log("Eventos de musica:", data._embedded ? data._embedded.events : "No hay eventos.");
+    })
+    .catch(error => console.log("Error al obtener los eventos:", error));
+}
+    
+///////////
 function mostrarEventos(eventos) {
     const listaEventos = document.createElement("ul");
-
     eventos.forEach(evento => {
         const li = document.createElement("li");
         const tipo_event = obtenerTipoEvento(evento);
@@ -219,6 +255,16 @@ function mostrarEventos(eventos) {
 
         // li.appendChild(enlace);
         listaEventos.appendChild(li);
+
+        const lugar = evento._embedded.venues[0];//obtenemos el lugar del evento
+        const lat = lugar.location.latitude;
+        const lon = lugar.location.longitude;
+        if (lat && lon) {//si hay coordenadas
+            const marcador = new mapboxgl.Marker()//creamos marcador
+                .setLngLat([lon, lat])  //ubicamos al marcador en el mapa
+                .setPopup(new mapboxgl.Popup().setText(`${evento.name} - ${evento.dates.start.localDate}`))//añadimos una ventana emergete cn el nombre y la fecha
+                .addTo(map);//añadimos al mapa
+        }
     });
 
     document.getElementById("datos").appendChild(listaEventos);
@@ -232,7 +278,6 @@ function obtenerTipoEvento(evento) {
 }
 
 //funcion para crear el estilo de la lista del contenido de datos 
-
 
 
 //llamada a window onload que carga las funciones 

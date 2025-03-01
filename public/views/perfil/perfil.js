@@ -7,7 +7,7 @@ window.onload = function () {
   const formPerfil = document.getElementById("formPerfil");
 
   // Cargamos los datos del usuario
-  cargarDatosUsuario(usuario);
+  datosUser(usuario);
 
   // Evento que envía el formulario de modificacion del usuario
   formPerfil.addEventListener("submit", async function (event) {
@@ -62,40 +62,36 @@ window.onload = function () {
         },
         body: JSON.stringify(datosActualizados),
       });
-
-      if (respuesta.ok) {
-        alert("Perfil actualizado con éxito");
+      const data = await respuesta.json();
+      if (!respuesta.ok) {
+        throw new Error(data.mensaje);
+      } 
+      alert("Perfil actualizado con éxito");
         if (usuario && usuario !== usuarioForm) {
           localStorage.setItem('nombreUser', usuario);
           document.getElementById("titulo").textContent = `Perfil de ${usuario}`;
         }
-      } else {
-        const error = await respuesta.json();
-        alert(`Error: ${error.mensaje}`);
-      }
     } catch (error) {
-      console.error("Error al actualizar el perfil:", error);
-      alert("Error al actualizar el perfil");
+      alert(error);
+      console.error(error);
     }
   });
 
-  // Función para cargar los datos actuales del usuario
-  async function cargarDatosUsuario(usuario) {
+  async function datosUser(usuario) {
     try {
-      // hacemos una solicitud GET al backend para obtener los datos del usuario
-      const solicitud = await fetch(`/api/usuario/${usuario}`);
-      if (solicitud.ok) {
-        const dataUsuario = await solicitud.json();
-        // Rellenamos el formulario con los datos actuales
-        document.getElementById('usuario').value = dataUsuario.usuario;
-        document.getElementById('email').value = dataUsuario.email;
-      } else {
-        const error = await solicitud.json();
-        alert(`Error: ${error.mensaje}`);
+      const response = await fetch(`/api/usuario/${usuario}`, {
+        method: "GET",
+      });
+      const data=await response.json();//obtnemos y cnvertimos la respuesta
+  
+      if (!response.ok) {
+        throw new Error(data.mensaje);//lanzamos el error
       }
-    } catch (error) {
-      console.error("Error al cargar los datos del usuario:", error);
-      alert("Error al cargar los datos del usuario");
+      document.getElementById('usuario').value = data.usuario;//rellenamos el form cn los dat
+      document.getElementById('email').value = data.email;
+
+    } catch (error) {//recibimos el error y 
+      console.log(error);
     }
   }
 };
