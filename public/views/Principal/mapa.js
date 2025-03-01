@@ -1,8 +1,7 @@
 // Recuperamos el usuario en el localStorage
 // Si el usuario está autenticado, lo guardamos
 // Si no existe, seguimos en la ventana del login
-const nombreUsuario = localStorage.getItem("nombreUsuario");
-const token = localStorage.getItem("token");
+const nombreUsuario = localStorage.getItem('nombreUser');
 // if (!nombreUsuario) {
 //     window.location.href = '/login/login.html';
 // }
@@ -17,20 +16,58 @@ const head = document.querySelector("head");
 
 //funcion para inicializar la configuracion del mapa
 
-function initMapa() {
-  agregarTituloUsuario();
-  agregarMapayBusqueda();
-  cargarMapbox();
+function initMapa(){
+    crearHeader();
+    agregarMapayBusqueda();
+    cargarMapbox();
+    //enlacePerfil();
 }
 
-//añadir titulo del usuario en el header
-function agregarTituloUsuario() {
-  const h2 = document.createElement("h2");
-  h2.setAttribute("id", "titulo");
-  h2.textContent = `Hola ${nombreUsuario}`;
-  header.appendChild(h2);
-  body.appendChild(header);
+function crearHeader(){
+
+
+    //titulo usuario
+    const h2 = document.createElement("h2");
+    h2.setAttribute("id","titulo");
+    h2.textContent = `Hola ${nombreUsuario}`;
+    header.appendChild(h2);
+
+    const datosli = [
+        {name : 'Editar Perfil', link : '/views/perfil/perfil.html',icon : 'fas fa-cogs'},
+        {name : 'Favoritos', link : '#',icon : 'fas fa-star'},
+        {name : 'Cerrar Sesion', link : '#',icon : 'fas fa-power-off'}
+    ];
+
+    const ul = document.createElement('ul');
+    ul.setAttribute('id','ulNav');
+    
+    datosli.forEach(datosli => {
+        const li = document.createElement('li');
+        li.setAttribute('id','liNav');
+        const a = document.createElement('a');
+        a.setAttribute('id','aNav');
+        a.textContent = datosli.name;
+        a.href = datosli.link;
+
+        if (datosli.icon) {
+            const icon = document.createElement('i');
+            icon.setAttribute('id','icon');
+            icon.setAttribute('class',datosli.icon);
+            a.prepend(icon);
+        }
+        
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
+
+    const divNav = document.createElement('div');
+    divNav.setAttribute('class','divNav');
+    divNav.appendChild(ul);
+    header.appendChild(divNav);
 }
+
+
+
 
 // // Añadir el nombre del usuario en el header
 // const h2 = document.createElement("h2");
@@ -150,22 +187,26 @@ function configurarMapa() {
 //hay que añadir las rutas y objetivo que salga el nombre del usuario
 
 // Creamos un enlace para redirigir a la ventana de perfil de usuario
-function enlacePerfil() {
-	const perfilUser = document.createElement("a");
-	perfilUser.setAttribute("href", "/views/perfil/perfil.html");
-	perfilUser.textContent = "Editar perfil";
-	document.body.appendChild(perfilUser);
-}
-enlacePerfil();
+// function enlacePerfil() {
+// 	const perfilUser = document.createElement("a");
+// 	perfilUser.setAttribute("href", "/views/perfil/perfil.html");
+// 	perfilUser.textContent = "Editar perfil";
+// 	document.body.appendChild(perfilUser);
+// }
+
 
 ///// Esto es nuevo
 //Configurar el buscador
 
 function configurarBuscador() {
-  const geocoder = new MapboxGeocoder({
-    accessToken: mapboxgl.accessToken,
-    mapboxgl: mapboxgl,
-  });
+    const geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl,
+        marker :true,
+        flyTo: true,
+        placeholder: "Buscar..",
+        limit: 5
+    });
 
   document.getElementById("busqueda").appendChild(geocoder.onAdd(map));
 
@@ -195,9 +236,11 @@ function obtenerDatosTickmaster() {
 function mostrarEventos(eventos) {
   const listaEventos = document.createElement("ul");
 
-  eventos.forEach((evento) => {
-    const li = document.createElement("li");
-    const tipo_event = obtenerTipoEvento(evento);
+    eventos.forEach(evento => {
+        const li = document.createElement("li");
+
+        //por usar para poder identificar el tipo de evento ej: Deportes,Musica,Teatro,etc..
+        const tipo_event = obtenerTipoEvento(evento);
 
     //aqui obtengo la imgen y si no exite usamos una predeterminada
     const imagentick =
@@ -209,13 +252,21 @@ function mostrarEventos(eventos) {
 
     li.innerHTML = `
         <div class= "evento-info">
-        <img src="${imagentick}" alt="${evento.name} class "evento-imagen">
+        <div class="evento-info-imagen">
+        <img src="${imagentick}" alt="${evento.name} class "evento-imagen" />
+        </div>
+        <div class="evento-info-texto">
         <p><strong>${evento.name}</strong></p>
         <p>${evento.dates.start.localDate} - ${evento.dates.start.localTime}</p>
         <p>${evento._embedded.venues[0].name} - ${evento._embedded.venues[0].city.name} - ${evento._embedded.venues[0].country.name}</p> 
+        </div>
+        <div class ="evento-favorito">
+            <i class="fas fa-star favorito" data-event-id="${evento.id}"></i>
+        </div>
         <a href="${evento.url}" target="_blank" class="comprar-entradas">Comprar Entradas </a>
         </div>
         `;
+        
 
     // const enlace = document.createElement("a");
     // enlace.href = evento.url;
@@ -226,7 +277,20 @@ function mostrarEventos(eventos) {
     listaEventos.appendChild(li);
   });
 
-  document.getElementById("datos").appendChild(listaEventos);
+
+    const favoritos = document.querySelectorAll(".favorito");
+    favoritos.forEach(favorito => {
+        favorito.addEventListener("click",function () {
+            if (favorito.classList.contains("fa-star")) {
+                favorito.classList.remove("fa-star");
+                favorito.classList.add("fa-check");
+            } else {
+                favorito.classList.remove("fa-check");
+                favorito.classList.add("fa-star");
+            }
+        });
+    });
+
 }
 
 //funcion para obtener los tipos de eventos de tickmaster
