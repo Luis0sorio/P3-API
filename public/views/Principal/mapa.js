@@ -2,7 +2,7 @@
 // Recuperamos el usuario en el localStorage
 // Si el usuario está autenticado, lo guardamos
 // Si no existe, seguimos en la ventana del login
-const nombreUsuario = localStorage.getItem('nombreUsuario');
+const nombreUsuario = localStorage.getItem('nombreUser');
 // if (!nombreUsuario) {
 //     window.location.href = '/login/login.html';
 // }
@@ -18,19 +18,55 @@ const head = document.querySelector("head");
 //funcion para inicializar la configuracion del mapa
 
 function initMapa(){
-    agregarTituloUsuario();
+    crearHeader();
     agregarMapayBusqueda();
     cargarMapbox();
 }
 
-//añadir titulo del usuario en el header
-function agregarTituloUsuario() {
+function crearHeader(){
+
+
+    //titulo usuario
     const h2 = document.createElement("h2");
     h2.setAttribute("id","titulo");
     h2.textContent = `Hola ${nombreUsuario}`;
     header.appendChild(h2);
-    body.appendChild(header);
+
+    const datosli = [
+        {name : 'Editar Perfil', link : '#',icon : 'fas fa-cogs'},
+        {name : 'Favoritos', link : '#',icon : 'fas fa-star'},
+        {name : 'Cerrar Sesion', link : '#',icon : 'fas fa-power-off'}
+    ];
+
+    const ul = document.createElement('ul');
+    ul.setAttribute('id','ulNav');
+    
+    datosli.forEach(datosli => {
+        const li = document.createElement('li');
+        li.setAttribute('id','liNav');
+        const a = document.createElement('a');
+        a.setAttribute('id','aNav');
+        a.textContent = datosli.name;
+        a.href = datosli.link;
+
+        if (datosli.icon) {
+            const icon = document.createElement('i');
+            icon.setAttribute('id','icon');
+            icon.setAttribute('class',datosli.icon);
+            a.prepend(icon);
+        }
+        
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
+
+    const divNav = document.createElement('div');
+    divNav.setAttribute('class','divNav');
+    divNav.appendChild(ul);
+    header.appendChild(divNav);
 }
+
+
 
 
 // // Añadir el nombre del usuario en el header
@@ -149,11 +185,11 @@ function configurarMapa() {
 //METER ESTO EN UNA FUNCION
 
 // Creamos un enlace para redirigir a la ventana de perfil de usuario
-const perfilUser = document.createElement('a');
-perfilUser.setAttribute('href', '/views/perfil/perfil.html');
-perfilUser.textContent = "Editar perfil"
-perfilUser.setAttribute('target', '_blank'); // hay que cambiar esto
-document.body.appendChild(perfilUser);
+// const perfilUser = document.createElement('a');
+// perfilUser.setAttribute('href', '/views/perfil/perfil.html');
+// perfilUser.textContent = "Editar perfil"
+// perfilUser.setAttribute('target', '_blank'); // hay que cambiar esto
+// header.appendChild(perfilUser);
 
 
 ///// Esto es nuevo 
@@ -162,7 +198,11 @@ document.body.appendChild(perfilUser);
 function configurarBuscador() {
     const geocoder = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
-        mapboxgl: mapboxgl
+        mapboxgl: mapboxgl,
+        marker :true,
+        flyTo: true,
+        placeholder: "Buscar..",
+        limit: 5
     });
 
     document.getElementById('busqueda').appendChild(geocoder.onAdd(map));
@@ -194,6 +234,8 @@ function mostrarEventos(eventos) {
 
     eventos.forEach(evento => {
         const li = document.createElement("li");
+
+        //por usar para poder identificar el tipo de evento ej: Deportes,Musica,Teatro,etc..
         const tipo_event = obtenerTipoEvento(evento);
 
         //aqui obtengo la imgen y si no exite usamos una predeterminada
@@ -203,13 +245,20 @@ function mostrarEventos(eventos) {
 
         li.innerHTML = `
         <div class= "evento-info">
-        <img src="${imagentick}" alt="${evento.name} class "evento-imagen">
+        <div class="evento-info-imagen">
+        <img src="${imagentick}" alt="${evento.name} class "evento-imagen" />
+        </div>
+        <div class="evento-info-texto">
         <p><strong>${evento.name}</strong></p>
         <p>${evento.dates.start.localDate} - ${evento.dates.start.localTime}</p>
         <p>${evento._embedded.venues[0].name} - ${evento._embedded.venues[0].city.name} - ${evento._embedded.venues[0].country.name}</p> 
+        </div>
+        <div class ="evento-favorito">
+            <i class="fas fa-star favorito" data-event-id="${evento.id}"></i>
+        </div>
         <a href="${evento.url}" target="_blank" class="comprar-entradas">Comprar Entradas </a>
         </div>
-        `
+        `;
         
 
         // const enlace = document.createElement("a");
@@ -223,6 +272,20 @@ function mostrarEventos(eventos) {
 
     document.getElementById("datos").appendChild(listaEventos);
 
+
+    const favoritos = document.querySelectorAll(".favorito");
+    favoritos.forEach(favorito => {
+        favorito.addEventListener("click",function () {
+            if (favorito.classList.contains("fa-star")) {
+                favorito.classList.remove("fa-star");
+                favorito.classList.add("fa-check");
+            } else {
+                favorito.classList.remove("fa-check");
+                favorito.classList.add("fa-star");
+            }
+        });
+    });
+
 }
 
 //funcion para obtener los tipos de eventos de tickmaster
@@ -231,7 +294,7 @@ function obtenerTipoEvento(evento) {
     return evento.classifications && evento.classifications[0] ? evento.classifications[0].segment.name : "Desconocido";
 }
 
-//funcion para crear el estilo de la lista del contenido de datos 
+
 
 
 
