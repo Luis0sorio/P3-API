@@ -8,7 +8,7 @@ const tokenSchema = new Schema({
 });
 
 // Crear un índice para eliminar tokens expirados automáticamente
-tokenSchema.index({expiracion: 1}, {expireAfterSeconds: 0});
+//tokenSchema.index({expiracion: 1}, {expireAfterSeconds: 0});
 
 const Token = mongoose.model("Token", tokenSchema);
 module.exports = Token;

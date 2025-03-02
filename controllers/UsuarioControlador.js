@@ -93,8 +93,8 @@ const verificarLogin = async (req, res) => {
       sameSite: 'strict', // cookie accesible en el mismo dominio
       maxAge: 3600000 // validez de la cookie (1h)
     });
-    //res.send({usuario, token});
-    res.status(200).json({ mensaje: "Éxito al iniciar sesión", token});
+
+    return res.status(200).json({ mensaje: "Éxito al iniciar sesión", token});
     
   } catch (error) {
     console.error("Error en el inicio de sesión: ", error);

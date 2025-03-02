@@ -194,7 +194,7 @@ window.onload = function () {
 
 async function inicioSesion(usuario) {
   try {
-    const data = await peticion("http://localhost:3000/api/login", {
+    const data = await fetch("http://localhost:3000/api/login", {
       method: "POST",
       //
       credentials: 'include',
