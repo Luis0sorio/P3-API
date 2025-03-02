@@ -196,9 +196,7 @@ async function inicioSesion(usuario) {
   try {
     const data = await fetch("http://localhost:3000/api/login", {
       method: "POST",
-      //
       credentials: 'include',
-      //
       headers: {
         "Content-Type": "application/json",
       },
