@@ -149,7 +149,6 @@ window.onload = function () {
   // Cargamos los datos del usuario
   datosUser(usuario);
 
-<<<<<<< HEAD
   // Evento que envía el formulario de modificacion del usuario
   formPerfil.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -235,9 +234,7 @@ window.onload = function () {
       console.log(error);
     }
   }
-=======
   formPerfilUsuario();
   enlaceMapa();
->>>>>>> main
 };
 

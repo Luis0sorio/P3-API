@@ -5,6 +5,10 @@ let tipos=["Music", "Sports", "Theater", "Comedy", "Arts","Festivals","Musicals"
 
 const nombreUsuario = localStorage.getItem('nombreUser');
 console.log(nombreUsuario);
+
+let marcadores=[];//guardamos los marcadores aqui
+let ciudaD="Madrid";//aki va a ir el valor de la ciudad para q no se me sobreescriba
+
 // if (!nombreUsuario) {
 //     window.location.href = '/login/login.html';
 // }
@@ -141,10 +145,11 @@ function diviFil() {
     divFlitro.appendChild(select);
     body.appendChild(divFlitro);
 
-    select.addEventListener("change", function() {
+    select.addEventListener("change", function() {//se se selecciona algo 
+        //vaciamos todo
         let tipoSeleccionado = select.value;
         console.log("eleccionnnn", select.value);
-        obtenertipos(tipoSeleccionado); // Llama a la función con el tipo seleccionado
+        obtenerDatosTickmaster(tipoSeleccionado,ciudaD);//llamamos otra vez y pasamos el tipo,mirar como hacer pra guardar la ciudad
     });
 }
 
@@ -240,33 +245,57 @@ function configurarBuscador() {
 
 //obtener y mostrar eventos de la api de tickmaster
 //o usar geohash<<<<<<-------------
+/*
 function obtenerDatosTickmaster() {
     const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
     fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&city=Berlin&radius=10&size=50`)
         .then(response => response.json())
         .then(data => mostrarEventos(data._embedded.events))
-        .catch(error => console.log('Error al obtener los eventos:', error));
+        .catch(error => console.log('Error al obtener los eventos:', error));//mirar el manejo de erroes para avisar si no hay eventos o si hay algún erro.
 }
+ */
 ///////////////////
+function elimMarcadores() {
+    marcadores.forEach(marcador => {//recorro el array
+        marcador.remove(); //elimino los marcadores del mapa
+    });
+    marcadores = []; //vacio el array de marcadores
+}
 
-function obtenertipos(tipo) {
+function obtenerDatosTickmaster(tipo,ciudad) {
     const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
-    fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&classificationName=${tipo}&city=Berlin`)
-    .then(response => response.json())
-    .then(data => {
-        console.log("Eventos de musica:", data._embedded ? data._embedded.events : "No hay eventos.");
-    })
-    .catch(error => console.log("Error al obtener los eventos:", error));
+    let url=`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&radius=10&size=50`
+    if (tipo != null) {
+        url +=`&classificationName=${tipo}`;
+    }
+    if (ciudad != null) {
+        url += `&city=${ciudad}`
+    }
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data._embedded && data._embedded.events) {//si la respuesta tiene el campo _embedded.events, mostramos eventos
+                mostrarEventos(data._embedded.events);
+            } else {
+                console.log('No se encontraron eventos.');//hacer un pop-up
+                console.log(data);//hacer un pop-up
+            }
+        })
+        .catch(error => {
+            console.log('Error al obtener los eventos:', error);
+        });//mirar el manejo de erroes para avisar si no hay eventos o si hay algún error.
 }
     
 ///////////
 function mostrarEventos(eventos) {
+    elimMarcadores();//elimino marcadores
+    
+    const contenedorDatos = document.getElementById("datos");//accedemos al contenedor
+    contenedorDatos.innerHTML = "";//limpiamos antes de mostrar los eventos
+
     const listaEventos = document.createElement("ul");
     eventos.forEach(evento => {
-        const li = document.createElement("li");
-
-    //por usar para poder identificar el tipo de evento ej: Deportes,Musica,Teatro,etc..
-    const tipo_event = obtenerTipoEvento(evento);
+    const li = document.createElement("li");
 
     //aqui obtengo la imgen y si no exite usamos una predeterminada
     const imagentick =
@@ -309,23 +338,26 @@ function mostrarEventos(eventos) {
                 .setLngLat([lon, lat])  //ubicamos al marcador en el mapa
                 .setPopup(new mapboxgl.Popup().setText(`${evento.name} - ${evento.dates.start.localDate}`))//añadimos una ventana emergete cn el nombre y la fecha
                 .addTo(map);//añadimos al mapa
+
+                marcadores.push(marcador);//guardamos marcador para luego podre brrarlo
         }
+        
     // li.appendChild(enlace);
     listaEventos.appendChild(li);
   });
-
+  //console.log(marcadores);
   document.getElementById("datos").appendChild(listaEventos);
 
   const favoritos = document.querySelectorAll(".favorito");
   favoritos.forEach((favorito) => {
     favorito.addEventListener("click", function () {
-      if (favorito.classList.contains("fa-star")) {
-        favorito.classList.remove("fa-star");
-        favorito.classList.add("fa-check");
-      } else {
-        favorito.classList.remove("fa-check");
-        favorito.classList.add("fa-star");
-      }
+        if (favorito.classList.contains("fa-star")) {
+            favorito.classList.remove("fa-star");
+            favorito.classList.add("fa-check");
+        } else {
+            favorito.classList.remove("fa-check");
+            favorito.classList.add("fa-star");
+        }
     });
   });
 }
@@ -344,5 +376,5 @@ function obtenerTipoEvento(evento) {
 //llamada a window onload que carga las funciones 
 window.onload = function() {
     initMapa();
-    obtenerDatosTickmaster();
+    obtenerDatosTickmaster(null,ciudaD);//pasar la ciudad q tenga en la BBDD o pasar ciudad q maiquel me pase
 }
