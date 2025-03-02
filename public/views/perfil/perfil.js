@@ -137,7 +137,7 @@ async function cargarDatosUsuario(usuario) {
 
 function enlaceMapa() {
   const enlaceMapa = document.createElement("a");
-  enlaceMapa.setAttribute("href", "/views/principal/index.html");
+  enlaceMapa.setAttribute("href", "/views/dashboard/index.html");
   enlaceMapa.textContent = "Volver atrás";
   document.body.appendChild(enlaceMapa);
 }

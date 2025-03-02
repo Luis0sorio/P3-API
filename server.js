@@ -36,9 +36,9 @@ app.get('/registro/registro.html', (req, res) => {
 app.get('/login/login.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'views', 'login', 'login.html'));
 });
-// La aplicación carga el index (principal) después del login exitoso
-app.get('/principal/index.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'views', 'principal', 'index.html'));
+// La aplicación carga el index (dashboard) después del login exitoso
+app.get('/dashboard/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'views', 'dashboard', 'index.html'));
 });
 
 // La consola muestra información del puerto en el que escucha la aplicación

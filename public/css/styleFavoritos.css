@@ -1,0 +1,68 @@
+header {
+    height: 30px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-bottom: black 2px solid;
+}
+
+#titulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+#ulNav {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+#liNav {
+    margin-right: 20px;
+}
+
+#aNav {
+    text-decoration: none;
+    font-size: 16px;
+}
+
+#aNav:hover {
+    color: #005bb5;
+}
+
+#icon {
+    margin-right: 10px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 60vh; /* Altura reducida */
+  background-color: white;
+  width: 60%; /* Reducido en tamaño */
+  margin: 50px auto 0 auto; /* Añadido margen superior de 50px */
+  border: 2px blue solid;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.divIzq {
+  width: 200px;
+  background-color: white;
+  border: 1px solid black;
+}
+
+.divDer {
+  flex-grow: 1;
+  background-color: white;
+  border: 1px solid greenyellow;
+}
