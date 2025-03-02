@@ -61,19 +61,20 @@ const addNuevoUsuario = async (req, res) => {
 const verificarLogin = async (req, res) => {
   try {
     // Extraemos los datos del formulario de login
-    const {usuario, password} = req.body;
+    const { usuario, password } = req.body;
 
     // Verificamos que tengan valores
     if (!usuario || !password) {
       return res.status(400).json({ mensaje: "Usuario y contraseña son obligatorios" });
     }
 
-    // Verificamos si el usuario o la password existen en la base de datos
+    // Verificamos si el usuario existe en la base de datos
     const verificarUsuario = await Usuario.findOne({ usuario });
     if (!verificarUsuario) {
       return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
     }
 
+    // Verificamos si la contraseña es correcta
     const verificarPassword = await bcrypt.compare(password, verificarUsuario.password);
     if (!verificarPassword) {
       return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
@@ -81,42 +82,57 @@ const verificarLogin = async (req, res) => {
 
     // Implementamos el token JWT
     const token = jwt.sign(
-      {id: verificarUsuario._id, usuario: verificarUsuario.usuario},
+      { id: verificarUsuario._id, usuario: verificarUsuario.usuario },
       SECRETO,
-      {expiresIn: '1h'}
+      { expiresIn: '1h' }
     );
 
     // Enviamos el token en una cookie
     res.cookie('access_token', token, {
       httpOnly: true, // cookie solo accesible en el servidor
-      secure: process.env.NODE_ENV === 'production', // Se envía la cookie por https en produccion
+      secure: process.env.NODE_ENV === 'production', // Se envía la cookie por https en producción
       sameSite: 'strict', // cookie accesible en el mismo dominio
       maxAge: 3600000 // validez de la cookie (1h)
     });
 
-    return res.status(200).json({ mensaje: "Éxito al iniciar sesión", token});
-    
+    // Devolvemos todos los datos del usuario (excepto la contraseña)
+    const datosUsuario = {
+      id: verificarUsuario._id,
+    };
+
+    return res.status(200).json({
+      mensaje: "Éxito al iniciar sesión",
+      token,
+      usuario: datosUsuario, // Devolvemos todos los datos del usuario
+    });
+
   } catch (error) {
     console.error("Error en el inicio de sesión: ", error);
     res.status(500).json({ mensaje: "Error interno del servidor" });
   }
-}
+};
 
 // Funcion que obtiene los datos del usuario logeado 
 const obtenerDatosUsuario = async (req, res) => {
   try {
-    // Recuperamos el usuario de la solicitud
-    const usuario = req.params.usuario;
-    // Busca en la base de datos un usuario con el nombre proporcionado
-    const usuarioExiste = await Usuario.findOne({usuario});
+    // Recuperamos el id de la solicitud
+    const usuarioId = req.params.id;
+    // Busca en la base de datos un usuario con el id proporcionado
+    const usuarioExiste = await Usuario.findOne({usuarioId});
     // Si no existe, mostramos un mensaje de error
     if (!usuarioExiste) {
       return res.status(404).json({mensaje : "Usuario no encontrado."});
     }
-    // Si existe, devuelve la información
+    // Si existe, devuelve la información del usuario
     res.status(200).json({
-      usuario: usuarioExiste.usuario,
+      id: usuarioExiste._id,
+      nombre: usuarioExiste.nombre,
+      apellido1: usuarioExiste.apellido1,
+      apellido2: usuarioExiste.apellido2,
+      pais: usuarioExiste.pais,
+      ciudad: usuarioExiste.ciudad,
       email: usuarioExiste.email,
+      usuario: usuarioExiste.usuario,
     });
   } catch (error) {
     console.error("Error al obtener los datos del usuario:", error);
