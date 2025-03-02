@@ -33,9 +33,9 @@ app.get('/login/login.html', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'public', 'views', 'login', 'login.html'));
 });
 
-// Redirigir al index (principal) después del login exitoso
-app.get('/principal/index.html', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'public', 'views', 'principal', 'index.html'));
+// Redirigir al index (dashboard) después del login exitoso
+app.get('/dashboard/index.html', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'public', 'views', 'dashboard', 'index.html'));
 });
 
 // Iniciar el servidor

@@ -18,6 +18,7 @@ function createForm() {
 }
 
 //funcion que crea y devuelve el titulo del formulario
+//funcion que crea y devuelve el titulo del formulario
 function createTitle() {
   const title = document.createElement("h2");
   title.textContent = "Bienvenido";
@@ -192,9 +193,9 @@ async function inicioSesion(usuario) {
     console.log(data.mensaje);
     errores(null); //llamamos otra vez a la función
     localStorage.setItem("nombreUser", usuario.usuario); //guardamos el nombre del usuario
-    //localStorage.setItem("token", data.token); // Guardamos el token en localStorage
-    window.location.href = "/principal/index.html"; //redirigimos
-  } catch (error) {//recibimos el error y 
+    localStorage.setItem("token", data.token); // Guardamos el token en localStorage
+    window.location.href = "/dashboard/index.html"; //redirigimos
+  } catch (error) {
     errores(error); //llamamos a la funcion y le pasamos el error
   }
 }
