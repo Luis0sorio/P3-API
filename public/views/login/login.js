@@ -18,6 +18,7 @@ function createForm() {
 }
 
 //funcion que crea y devuelve el titulo del formulario
+//funcion que crea y devuelve el titulo del formulario
 function createTitle() {
   const title = document.createElement("h2");
   title.textContent = "Bienvenido";
@@ -169,39 +170,27 @@ window.onload = function () {
       usuario: inputUsuario.value,
       password: inputPassword.value,
     };
-    console.log(usuario);
     inicioSesion(usuario);
   });
 };
-//forma diferente del fetch al registro,con una funcion general
-async function peticion(url, headers = {}) {
-  //recibe la url y la cabecera
-  try {
-    const response = await fetch(url, headers); //hacemos la peticion cn lo recibido
-    const data = await response.json(); //respuesta
-    console.log("Respuesta del backend:", data);
-    if (!response.ok) {
-      //si la respuesta no es ok
-      throw new Error(data.mensaje);
-    }
-    console.log("Respuesta recibida bien  ", data);
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw error; //lanzamos el error para q se maneje donde llamen a la funcion
-  }
-}
 
 async function inicioSesion(usuario) {
   try {
-    const data = await peticion("http://localhost:3000/api/login", {
+    const response = await fetch("/api/login", {
       method: "POST",
+      credentials: 'include',
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(usuario),
     });
-    console.log("yasta echo", data);
+    const data=await response.json();//obtnemos y cnvertimos la respuesta
+
+    if (!response.ok) {//si hay un codigo de estado fuera del rango 200-299, response.ok cambia a false
+      throw new Error(data.mensaje);//lanzamos el error
+    }
+
+    console.log(data.mensaje);
     errores(null); //llamamos otra vez a la función
     localStorage.setItem("nombreUser", usuario.usuario); //guardamos el nombre del usuario
     localStorage.setItem("token", data.token); // Guardamos el token en localStorage
@@ -210,3 +199,22 @@ async function inicioSesion(usuario) {
     errores(error); //llamamos a la funcion y le pasamos el error
   }
 }
+////fetch para obtener info,mirar donde pnerlo
+/*
+async function obtenerDatosUser(usuario) {
+  try {
+    const response = await fetch(`/api/usuario/${usuario}`, {
+      method: "GET",
+    });
+    const data=await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.mensaje);//lanzamos el error
+    }
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+*/
