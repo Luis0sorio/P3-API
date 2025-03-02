@@ -86,6 +86,14 @@ const verificarLogin = async (req, res) => {
       {expiresIn: '1h'}
     );
 
+    // Enviamos el token en una cookie
+    res.cookie('access_token', token, {
+      httpOnly: true, // cookie solo accesible en el servidor
+      secure: process.env.NODE_ENV === 'production', // Se envía la cookie por https en produccion
+      sameSite: 'strict', // cookie accesible en el mismo dominio
+      maxAge: 3600000 // validez de la cookie (1h)
+    });
+    //res.send({usuario, token});
     res.status(200).json({ mensaje: "Éxito al iniciar sesión", token});
     
   } catch (error) {

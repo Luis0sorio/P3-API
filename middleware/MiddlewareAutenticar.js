@@ -5,19 +5,19 @@ require('dotenv').config();
 const SECRETO = process.env.SECRETO;
 
 const verificarToken = async (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Obtener el token del header
+  const token = req.cookies.token; // Obtener el token de la cookie
 
   if (!token) {
     return res.status(401).json({ mensaje: 'Token no proporcionado' });
   }
 
   try {
-    // Verificar si el token está en la lista negra
+    // Verificamos si el token está en la lista negra
     if (await TokenControlador.esTokenInvalido(token)) {
       return res.status(401).json({ mensaje: 'Token inválido' });
     }
 
-    // Verificar el token JWT
+    // Verificamos el token
     const decoded = jwt.verify(token, SECRETO);
     req.usuario = decoded; // Adjuntar los datos del usuario al request
     next();

@@ -4,10 +4,13 @@ const express = require('express');
 const path = require('path');
 const conexionDB = require('./config/database.js');
 const rutas = require('./routes/rutas.js');
+const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT;
 const app = express();
+
 app.use(express.json());
+app.use(cookieParser);
 
 // Implementacion de middlewares
 // Funciones que permiten analizar, validar, registrar y modificar solicitudes

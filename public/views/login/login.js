@@ -174,28 +174,31 @@ window.onload = function () {
   });
 };
 //forma diferente del fetch al registro,con una funcion general
-async function peticion(url, headers = {}) {
-  //recibe la url y la cabecera
-  try {
-    const response = await fetch(url, headers); //hacemos la peticion cn lo recibido
-    const data = await response.json(); //respuesta
-    console.log("Respuesta del backend:", data);
-    if (!response.ok) {
-      //si la respuesta no es ok
-      throw new Error(data.mensaje);
-    }
-    console.log("Respuesta recibida bien  ", data);
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw error; //lanzamos el error para q se maneje donde llamen a la funcion
-  }
-}
+// async function peticion(url, headers = {}) {
+//   //recibe la url y la cabecera
+//   try {
+//     const response = await fetch(url, headers); //hacemos la peticion cn lo recibido
+//     const data = await response.json(); //respuesta
+//     console.log("Respuesta del backend:", data);
+//     if (!response.ok) {
+//       //si la respuesta no es ok
+//       throw new Error(data.mensaje);
+//     }
+//     console.log("Respuesta recibida bien  ", data);
+//     return data;
+//   } catch (error) {
+//     console.error(error);
+//     throw error; //lanzamos el error para q se maneje donde llamen a la funcion
+//   }
+// }
 
 async function inicioSesion(usuario) {
   try {
     const data = await peticion("http://localhost:3000/api/login", {
       method: "POST",
+      //
+      credentials: 'include',
+      //
       headers: {
         "Content-Type": "application/json",
       },
@@ -204,7 +207,7 @@ async function inicioSesion(usuario) {
     console.log("yasta echo", data);
     errores(null); //llamamos otra vez a la función
     localStorage.setItem("nombreUser", usuario.usuario); //guardamos el nombre del usuario
-    localStorage.setItem("token", data.token); // Guardamos el token en localStorage
+    //localStorage.setItem("token", data.token); // Guardamos el token en localStorage
     window.location.href = "/principal/index.html"; //redirigimos
   } catch (error) {
     errores(error); //llamamos a la funcion y le pasamos el error

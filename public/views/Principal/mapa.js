@@ -294,6 +294,26 @@ function obtenerTipoEvento(evento) {
     : "Desconocido";
 }
 
+// ***** SALMA SALMA SALMA *****
+async function cerrarSesion() {
+  try {
+    const respuesta = await fetch('/api/auth/logout', {
+      method: 'POST',
+      credentials: 'include', // Incluir cookies en la solicitud
+    });
+
+    if (respuesta.ok) {
+      // Redirigir al usuario al login
+      window.location.href = '/login/login.html';
+    } else {
+      const error = await respuesta.json();
+      alert(`Error: ${error.mensaje}`);
+    }
+  } catch (error) {
+    console.error('Error al cerrar sesión: ', error);
+    alert('Error al cerrar sesión');
+  }
+}
 //llamada a window onload que carga las funciones
 window.onload = function () {
   initMapa();

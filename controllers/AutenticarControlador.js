@@ -7,7 +7,7 @@ const SECRETO = process.env.SECRETO;
 
 // Función para cerrar sesión
 const logout = async (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Obtener el token del header
+  const token = req.cookies.token; // Obtener el token de la cookie
 
   if (!token) {
     return res.status(400).json({ mensaje: 'Token no proporcionado' });
@@ -21,11 +21,17 @@ const logout = async (req, res) => {
 
     // Decodificar el token para obtener la fecha de expiración
     const decoded = jwt.verify(token, SECRETO);
-    const expiracion = new Date(decoded.exp * 1000); // Convertir a fecha
+    const expiracion = new Date(decoded.exp * 1000); 
 
     // Agregar el token a la lista negra
     await TokenControlador.agregarToken(token, expiracion);
 
+    // Eliminamos la cookie
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', 
+      sameSite: 'strict',
+    });
     res.status(200).json({ mensaje: 'Sesión cerrada correctamente' });
   } catch (error) {
     console.error('Error al cerrar sesión:', error);
