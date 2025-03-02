@@ -7,7 +7,7 @@ const nombreUsuario = localStorage.getItem('nombreUser');
 console.log(nombreUsuario);
 
 let marcadores=[];//guardamos los marcadores aqui
-let ciudaD="Madrid";//aki va a ir el valor de la ciudad para q no se me sobreescriba
+let ciudaD="Houston";//aki va a ir el valor de la ciudad para q no se me sobreescriba//actualizacion, esto se va fuera,obtener la ciudadde la bbdd 
 
 // if (!nombreUsuario) {
 //     window.location.href = '/login/login.html';
@@ -149,7 +149,7 @@ function diviFil() {
         //vaciamos todo
         let tipoSeleccionado = select.value;
         console.log("eleccionnnn", select.value);
-        obtenerDatosTickmaster(tipoSeleccionado,ciudaD);//llamamos otra vez y pasamos el tipo,mirar como hacer pra guardar la ciudad
+        obtenerDatosTickmaster(tipoSeleccionado," Barcelona");//llamamos otra vez y pasamos el tipo,mirar como hacer pra guardar la ciudad
     });
 }
 
@@ -240,28 +240,20 @@ function configurarBuscador() {
       center: center,
       zoom: 12,
     });
+    console.log(`Ciudad seleccionada: ${ e.result.text}`);//obteenmos la ciudad elegida
+    obtenerDatosTickmaster(null,e.result.text);
   });
 }
 
-//obtener y mostrar eventos de la api de tickmaster
-//o usar geohash<<<<<<-------------
-/*
-function obtenerDatosTickmaster() {
-    const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
-    fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&city=Berlin&radius=10&size=50`)
-        .then(response => response.json())
-        .then(data => mostrarEventos(data._embedded.events))
-        .catch(error => console.log('Error al obtener los eventos:', error));//mirar el manejo de erroes para avisar si no hay eventos o si hay algún erro.
-}
- */
-///////////////////
 function elimMarcadores() {
     marcadores.forEach(marcador => {//recorro el array
         marcador.remove(); //elimino los marcadores del mapa
     });
     marcadores = []; //vacio el array de marcadores
 }
-
+function popUp(error) {
+  
+}
 function obtenerDatosTickmaster(tipo,ciudad) {
     const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
     let url=`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&radius=10&size=50`
@@ -360,6 +352,7 @@ function mostrarEventos(eventos) {
         }
     });
   });
+
 }
 
 //funcion para obtener los tipos de eventos de tickmaster
