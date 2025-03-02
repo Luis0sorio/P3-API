@@ -370,11 +370,12 @@ function obtenerTipoEvento(evento) {
     : "Desconocido";
 }
 
+// ***** SALMA SALMA SALMA *****
+async function cerrarSesion() {
 
-
-
-//llamada a window onload que carga las funciones 
-window.onload = function() {
-    initMapa();
-    obtenerDatosTickmaster(null,ciudaD);//pasar la ciudad q tenga en la BBDD o pasar ciudad q maiquel me pase
 }
+//llamada a window onload que carga las funciones
+window.onload = function () {
+  initMapa();
+  obtenerDatosTickmaster();
+};
