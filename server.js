@@ -1,49 +1,47 @@
-// Improtamos las dependencias
-require('dotenv').config();
-const express = require('express');
-const path = require('path');
-const conexionDB = require('./config/database.js');
-const rutas = require('./routes/rutas.js');
+require('dotenv').config(); // Configura dotenv
+const express = require('express'); // Importa Express
+const path =require('path'); // Importa path para manejar rutas de archivos
+const conexionDB = require('./config/database.js'); // Importa la función de conexión a la base de datos
+const rutas = require('./routes/rutas.js') ; // Importa las rutas
+const cookieParser = require('cookie-parser'); // Importa cookie-parser
 
-const PORT = process.env.PORT;
-const app = express();
-app.use(express.json());
+const PORT = process.env.PORT; // Obtiene el puerto desde las variables de entorno
+const app = express(); // Crea una instancia de Express
 
-// Implementacion de middlewares
-// Funciones que permiten analizar, validar, registrar y modificar solicitudes
-/**
- * Para analizar application/json -> solicitudes en formato json. Se cxonvierte en un objeto JS
- * app.use(express.json()); 
- * Para analizar application/x-www-form-urlencoded -> solicitudes HTML. Formularios.
- * app.use(express.urlencoded({ extended: true }));
- */
-
+// Middlewares
+app.use(express.json()); // Para analizar solicitudes en formato JSON
+app.use(cookieParser()); 
 
 // Servir archivos estáticos desde la carpeta 'public'
-app.use(express.static(path.join(__dirname, 'public')));
-// 
+app.use(express.static(path.join(process.cwd(), 'public')));
+
+// Usa las rutas definidas en './routes/rutas.js' bajo el prefijo '/api'
 app.use('/api', rutas);
 
-// Redirigir la raíz al archivo de login cuando se ejecuta la aplicación
+// Redirigir la raíz al archivo de login
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'views', 'login', 'login.html'));
-});
-// Desde el login, se accede al formulario de registro
-app.get('/registro/registro.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'views', 'registro', 'registro.html'));
-});
-// Del mismo modo, el botón 'atrás' redirecciona al login
-app.get('/login/login.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'views', 'login', 'login.html'));
-});
-// La aplicación carga el index (principal) después del login exitoso
-app.get('/principal/index.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'views', 'principal', 'index.html'));
+  res.sendFile(path.join(process.cwd(), 'public', 'views', 'login', 'login.html'));
 });
 
-// La consola muestra información del puerto en el que escucha la aplicación
+// Redirigir al formulario de registro
+app.get('/registro/registro.html', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'public', 'views', 'registro', 'registro.html'));
+});
+
+// Redirigir al login
+app.get('/login/login.html', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'public', 'views', 'login', 'login.html'));
+});
+
+// Redirigir al index (dashboard) después del login exitoso
+app.get('/dashboard/index.html', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'public', 'views', 'dashboard', 'index.html'));
+});
+
+// Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
-// Llamada a la conexión con la base de datos
+
+// Conectar a la base de datos
 conexionDB();
