@@ -1,0 +1,94 @@
+body{
+    background-color: #00bfff;
+}
+
+/* Estilos para el contenedor principal */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 120vh; 
+}
+
+/* Estilos para el formulario */
+.form {
+    background-color: white; 
+    padding: 40px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título del formulario */
+.form-title {
+    color: #007bff; 
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 24px; /* Tamaño de fuente ajustado */
+}
+
+/* Estilos para las etiquetas */
+.form-label {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+/* Estilos para los inputs */
+.form-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px; /* Reduce el espacio entre los inputs */
+    border: none;
+    border-bottom: 2px solid #007bff; /* Líneas más cortas y estilizadas */
+    outline: none;
+    font-size: 16px;
+    width: 100%; /* Ajuste del ancho */
+}
+
+/* Estilos para el botón */
+.form-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    width: 100%; 
+    font-size: 18px;
+}
+
+.form-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para el enlace */
+.form-link {
+    color: #007bff;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.form-link:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para el error */
+.form-error {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Estilos para el checkbox "Recuerdame" */
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-checkbox input {
+    margin-right: 5px;
+}
