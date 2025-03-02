@@ -1,7 +1,14 @@
 // Recuperamos el usuario en el localStorage
 // Si el usuario está autenticado, lo guardamos
 // Si no existe, seguimos en la ventana del login
-const nombreUsuario = localStorage.getItem("nombreUser");
+let tipos=["Music", "Sports", "Theater", "Comedy", "Arts","Festivals","Musicals","Family"];
+
+const nombreUsuario = localStorage.getItem('nombreUser');
+console.log(nombreUsuario);
+
+let marcadores=[];//guardamos los marcadores aqui
+let ciudaD="Madrid";//aki va a ir el valor de la ciudad para q no se me sobreescriba
+
 // if (!nombreUsuario) {
 //     window.location.href = '/login/login.html';
 // }
@@ -16,10 +23,12 @@ const head = document.querySelector("head");
 
 //funcion para inicializar la configuracion del mapa
 
-function initMapa() {
-  crearHeader();
-  agregarMapayBusqueda();
-  cargarMapbox();
+function initMapa(){
+   // agregarTituloUsuario();
+    diviFil();
+    crearHeader();
+    agregarMapayBusqueda();
+    cargarMapbox();
 }
 
 function crearHeader() {
@@ -118,27 +127,48 @@ function crearDivBusqueda() {
   return divBusqueda;
 }
 
+//div filtro y filtro
+function diviFil() {
+    const divFlitro = document.createElement("div");
+    divFlitro.setAttribute("id","filtro");
+    const select = document.createElement("select");
+    select.setAttribute("id","tpos");
+    select.setAttribute("name","tipos");
+
+    tipos.forEach(tipillos => {
+        let tipo=document.createElement("option");
+        tipo.textContent = tipillos;
+        tipo.setAttribute("value",tipillos);
+        select.appendChild(tipo);
+    });
+    select.selectedIndex = -1;
+    divFlitro.appendChild(select);
+    body.appendChild(divFlitro);
+
+    select.addEventListener("change", function() {//se se selecciona algo 
+        //vaciamos todo
+        let tipoSeleccionado = select.value;
+        console.log("eleccionnnn", select.value);
+        obtenerDatosTickmaster(tipoSeleccionado,ciudaD);//llamamos otra vez y pasamos el tipo,mirar como hacer pra guardar la ciudad
+    });
+}
+
 //cargar los archivos para el MapBox
 
-function cargarMapbox() {
-  const linkcss = document.createElement("link");
-  linkcss.setAttribute(
-    "href",
-    "https://api.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.css"
-  );
-  linkcss.setAttribute("rel", "stylesheet");
-  head.appendChild(linkcss);
+function cargarMapbox(){
+    const linkcss = document.createElement("link");
+    linkcss.setAttribute("href","https://api.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.css");
+    linkcss.setAttribute("rel","stylesheet");
+    head.appendChild(linkcss);
 
-  const scriptMapa = document.createElement("script");
-  scriptMapa.setAttribute(
-    "src",
-    "https://api.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.js"
-  );
-  scriptMapa.onload = function () {
-    cargarBuscador();
-    configurarMapa();
-  };
-  body.appendChild(scriptMapa);
+    const scriptMapa = document.createElement("script");
+    scriptMapa.setAttribute("src","https://api.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.js");
+    scriptMapa.onload = function() {
+        cargarBuscador();
+        configurarMapa();
+    };
+    body.appendChild(scriptMapa);
+
 }
 
 //funcion para cargar el buscador
@@ -214,27 +244,58 @@ function configurarBuscador() {
 }
 
 //obtener y mostrar eventos de la api de tickmaster
-
+//o usar geohash<<<<<<-------------
+/*
 function obtenerDatosTickmaster() {
-  const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
-  fetch(
-    `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&size=200`
-  )
-    .then((response) => response.json())
-    .then((data) => mostrarEventos(data._embedded.events))
-    .catch((error) => console.log("Error al obtener los eventos:", error));
+    const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
+    fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&city=Berlin&radius=10&size=50`)
+        .then(response => response.json())
+        .then(data => mostrarEventos(data._embedded.events))
+        .catch(error => console.log('Error al obtener los eventos:', error));//mirar el manejo de erroes para avisar si no hay eventos o si hay algún erro.
+}
+ */
+///////////////////
+function elimMarcadores() {
+    marcadores.forEach(marcador => {//recorro el array
+        marcador.remove(); //elimino los marcadores del mapa
+    });
+    marcadores = []; //vacio el array de marcadores
 }
 
-//mostrar datos de tickmaster
-
+function obtenerDatosTickmaster(tipo,ciudad) {
+    const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
+    let url=`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&radius=10&size=50`
+    if (tipo != null) {
+        url +=`&classificationName=${tipo}`;
+    }
+    if (ciudad != null) {
+        url += `&city=${ciudad}`
+    }
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data._embedded && data._embedded.events) {//si la respuesta tiene el campo _embedded.events, mostramos eventos
+                mostrarEventos(data._embedded.events);
+            } else {
+                console.log('No se encontraron eventos.');//hacer un pop-up
+                console.log(data);//hacer un pop-up
+            }
+        })
+        .catch(error => {
+            console.log('Error al obtener los eventos:', error);
+        });//mirar el manejo de erroes para avisar si no hay eventos o si hay algún error.
+}
+    
+///////////
 function mostrarEventos(eventos) {
-  const listaEventos = document.createElement("ul");
+    elimMarcadores();//elimino marcadores
+    
+    const contenedorDatos = document.getElementById("datos");//accedemos al contenedor
+    contenedorDatos.innerHTML = "";//limpiamos antes de mostrar los eventos
 
-  eventos.forEach((evento) => {
+    const listaEventos = document.createElement("ul");
+    eventos.forEach(evento => {
     const li = document.createElement("li");
-
-    //por usar para poder identificar el tipo de evento ej: Deportes,Musica,Teatro,etc..
-    const tipo_event = obtenerTipoEvento(evento);
 
     //aqui obtengo la imgen y si no exite usamos una predeterminada
     const imagentick =
@@ -266,22 +327,37 @@ function mostrarEventos(eventos) {
     // enlace.textContent = "Comprar Entradas";
     // enlace.target = "_blank";
 
+        // li.appendChild(enlace);
+        listaEventos.appendChild(li);
+
+        const lugar = evento._embedded.venues[0];//obtenemos el lugar del evento
+        const lat = lugar.location.latitude;
+        const lon = lugar.location.longitude;
+        if (lat && lon) {//si hay coordenadas
+            const marcador = new mapboxgl.Marker()//creamos marcador
+                .setLngLat([lon, lat])  //ubicamos al marcador en el mapa
+                .setPopup(new mapboxgl.Popup().setText(`${evento.name} - ${evento.dates.start.localDate}`))//añadimos una ventana emergete cn el nombre y la fecha
+                .addTo(map);//añadimos al mapa
+
+                marcadores.push(marcador);//guardamos marcador para luego podre brrarlo
+        }
+        
     // li.appendChild(enlace);
     listaEventos.appendChild(li);
   });
-
+  //console.log(marcadores);
   document.getElementById("datos").appendChild(listaEventos);
 
   const favoritos = document.querySelectorAll(".favorito");
   favoritos.forEach((favorito) => {
     favorito.addEventListener("click", function () {
-      if (favorito.classList.contains("fa-star")) {
-        favorito.classList.remove("fa-star");
-        favorito.classList.add("fa-check");
-      } else {
-        favorito.classList.remove("fa-check");
-        favorito.classList.add("fa-star");
-      }
+        if (favorito.classList.contains("fa-star")) {
+            favorito.classList.remove("fa-star");
+            favorito.classList.add("fa-check");
+        } else {
+            favorito.classList.remove("fa-check");
+            favorito.classList.add("fa-star");
+        }
     });
   });
 }
@@ -296,23 +372,7 @@ function obtenerTipoEvento(evento) {
 
 // ***** SALMA SALMA SALMA *****
 async function cerrarSesion() {
-  try {
-    const respuesta = await fetch('/api/auth/logout', {
-      method: 'POST',
-      credentials: 'include', // Incluir cookies en la solicitud
-    });
 
-    if (respuesta.ok) {
-      // Redirigir al usuario al login
-      window.location.href = '/login/login.html';
-    } else {
-      const error = await respuesta.json();
-      alert(`Error: ${error.mensaje}`);
-    }
-  } catch (error) {
-    console.error('Error al cerrar sesión: ', error);
-    alert('Error al cerrar sesión');
-  }
 }
 //llamada a window onload que carga las funciones
 window.onload = function () {
