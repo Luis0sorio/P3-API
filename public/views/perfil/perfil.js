@@ -143,9 +143,6 @@ function enlaceMapa() {
 }
 
 window.onload = function () {
-
-  const formPerfil = formPerfilUsuario();
-
   // Verificamos si el usuario está autenticado
   const usuario = localStorage.getItem("nombreUser");
 
