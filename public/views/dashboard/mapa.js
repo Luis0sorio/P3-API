@@ -338,9 +338,9 @@ function obtenerDatosTickmaster(tipo,ciudad) {
             if (data._embedded && data._embedded.events) {//si la respuesta tiene el campo _embedded.events, mostramos eventos
                 mostrarEventos(data._embedded.events);
             } else {
-                console.log('No se encontraron eventos.');//hacer un pop-up
-                console.log(data);//hacer un pop-up
-                mostrarEventos([]);
+              mostrarPopUp('No se encontraron eventos.');//hacer un pop-up
+              mostrarPopUp(data);//hacer un pop-up
+              mostrarEventos([]);
             }
         })
         .catch(error => {
