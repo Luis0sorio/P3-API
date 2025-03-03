@@ -14,6 +14,30 @@ const usuarioSchema = new Schema({
   email: { type: String, required: true, unique: true }, // Único para evitar duplicados
   usuario: { type: String, required: true, unique: true }, // Único para evitar duplicados
   password: { type: String, required: true },
+  // Lista de eventos favoritos. Array de objetos (favoritos)
+  favoritos: [
+    {
+      id: String,// id del evento
+      name: String, // nombre del evento
+      dates: {
+        start: {
+          localDate: String, // fecha evento
+          localTime: String, // hora evento
+        },
+      },
+      _embebed: { // informacion adicional
+        venues: [
+          {
+            name: String, // ubicación
+            city: { name: String }, // ciudad
+            country: { name: String }, // país
+          },
+        ],
+      },
+      url: String, // enlace entradas
+      imagen: String, // imagen del evento
+    },
+  ],
 });
 
 // Creo el modelo para los usuarios
