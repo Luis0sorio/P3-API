@@ -207,3 +207,48 @@ header {
 .favorito.fa-check {
     color: #f1c40f;
 }
+
+
+/* Estilo para el popup */
+.modal {
+    position: fixed;        /* Coloca el popup de manera fija en la pantalla */
+    bottom: 20px;           /* Se coloca a 20px del borde inferior */
+    left: 1640px;           /* Se coloca a 1640px del borde izquierdo */
+    background-color: aqua;  /* Color de fondo azul claro */
+    color: #721c24;         /* Color de texto rojo oscuro */
+    border: 1px solid aqua; /* Borde del popup */
+    border-radius: 5px;     /* Bordes redondeados */
+    padding: 15px;          /* Espaciado interno */
+    font-size: 16px;        /* Tamaño de la fuente */
+    z-index: 1000;          /* Asegúrate de que el popup esté encima de otros elementos */
+    display: none;          /* Inicialmente oculto */
+    width: auto;            /* Ajusta el ancho automáticamente */
+    max-width: 300px;       /* Ancho máximo */
+    word-wrap: break-word;  /* Ajusta el texto largo dentro del contenedor */
+    white-space: normal;    /* Ajuste del texto */
+}
+
+/* Estilo para el contenido dentro del popup */
+.modal-content {
+    display: flex;           /* Flexbox para alinear el contenido */
+    justify-content: space-between; /* Alinea el mensaje y el botón */
+    align-items: center;     /* Centra el contenido verticalmente */
+    padding: 10px;           /* Añade padding para un espacio adecuado */
+    height: auto;            /* Deja que la altura se ajuste automáticamente */
+    text-align: center;      /* Alinea el texto al centro */
+}
+
+/* Estilo para el botón de cerrar */
+.close {
+    background: none;
+    border: none;
+    color: #721c24;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Color de fondo para el botón de cerrar al pasar el ratón */
+.close:hover {
+    color: #f5c6cb;
+}
