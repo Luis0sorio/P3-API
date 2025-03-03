@@ -193,21 +193,25 @@ async function inicioSesion(usuario) {
     console.log(data.mensaje);
     errores(null); //llamamos otra vez a la función
 
-    localStorage.setItem("nombreUser", usuario.usuario); //guardamos el nombre del usuario
+    localStorage.setItem("datosUser", JSON.stringify(data.datos)); //guardamos los datos
     localStorage.setItem("token", data.token); // Guardamos el token en localStorage
 
-    obtenerDatosUser(data.id);
-
-    window.location.href = "/dashboard/index.html"; //redirigimos
+   window.location.href = "/dashboard/index.html"; //redirigimos
   } catch (error) {
     errores(error); //llamamos a la funcion y le pasamos el error
   }
 }
-
+/*
 async function obtenerDatosUser(id) {
+  const token = localStorage.getItem("token");
+  console.log("Token recibido:", token);
   try {
     const response = await fetch(`/api/usuario/${id}`, {
       method: "GET",
+      credentials: 'include',
+      headers: {
+        "Authorization": `Bearer ${token}`,  // Enviar el token como Bearer Token
+      },
     });
     const data=await response.json();
 
@@ -215,8 +219,9 @@ async function obtenerDatosUser(id) {
       throw new Error(data.mensaje);//lanzamos el error
     }
     localStorage.setItem("datosUser", data); //guardamos los datos del usuario
-    return data;
+    console.log(data);
   } catch (error) {
     console.log(error);
   }
 }
+*/

@@ -3,13 +3,15 @@
 // Si no existe, seguimos en la ventana del login
 let tipos=["Music", "Sports", "Theater", "Comedy", "Arts","Festivals","Musicals","Family"];
 
-const nombreUsuario = localStorage.getItem('nombreUser');
+let datos= JSON.parse(localStorage.getItem("datosUser"));
+
+const nombreUsuario = datos.nombre;
 console.log(nombreUsuario);
 
 let marcadores=[];//guardamos los marcadores aqui
 let ciudaD=null;//lo ponemos en null, si al fitrar algo en el tipo miramos la ciudad y esta en null será q no ha buscado en el buscador de los filtros nada, asi q usamos
 //el valor de ciudaduser, si n ps utilizamos esta
-const ciudaduser="Berlin";//eesto va a ser la ciudad q tenga el user en la bbdd
+const ciudaduser=datos.ciudad;//eesto va a ser la ciudad q tenga el user en la bbdd
 
 // if (!nombreUsuario) {
 //     window.location.href = '/login/login.html';
