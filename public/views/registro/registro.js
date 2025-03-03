@@ -28,7 +28,7 @@ function crearLabelNombre() {
   const labelname = document.createElement("label");
   labelname.setAttribute("for", "name");
   labelname.classList.add("form-label");
-  labelname.textContent = "Ingresa un nombre para registrate : ";
+  labelname.textContent = "Nombre";
   return labelname;
 }
 
@@ -49,7 +49,7 @@ function crearDivApellidos() {
   const labelnapell1 = document.createElement("label");
   labelnapell1.setAttribute("for", "apellido1");
   labelnapell1.classList.add("form-label");
-  labelnapell1.textContent = "Ingresa tu primer apellido : ";
+  labelnapell1.textContent = "Primer apellido";
 
   const inputapell1 = document.createElement("input");
   inputapell1.setAttribute("type", "text");
@@ -59,7 +59,7 @@ function crearDivApellidos() {
   const labelnapell2 = document.createElement("label");
   labelnapell2.setAttribute("for", "apellido2");
   labelnapell2.classList.add("form-label");
-  labelnapell2.textContent = "Ingresa tu segundo apellido : ";
+  labelnapell2.textContent = "Segundo apellido";
 
   const inputapell2 = document.createElement("input");
   inputapell2.setAttribute("type", "text");
@@ -116,7 +116,7 @@ async function cargarPaisesCiudades(form) {
   const labelPais = document.createElement("label");
   labelPais.setAttribute("for", "pais");
   labelPais.classList.add("form-label");
-  labelPais.textContent = "Selecciona un país : ";
+  labelPais.textContent = "País";
 
   const selectPais = document.createElement("select");
   selectPais.setAttribute("id", "paises");
@@ -141,7 +141,7 @@ async function cargarPaisesCiudades(form) {
   const labelCiudad = document.createElement("label");
   labelCiudad.setAttribute("for", "ciudad");
   labelCiudad.classList.add("form-label");
-  labelCiudad.textContent = "Selecciona una Ciudad : ";
+  labelCiudad.textContent = "Ciudad";
 
   const selectCiudad = document.createElement("select");
   selectCiudad.setAttribute("id", "ciudad");
@@ -181,7 +181,7 @@ function crearLabelEmail() {
   const labelemail = document.createElement("label");
   labelemail.setAttribute("for", "email");
   labelemail.classList.add("form-label");
-  labelemail.textContent = "Ingresa email : ";
+  labelemail.textContent = "Correo electrónico";
   return labelemail;
 }
 
@@ -197,7 +197,7 @@ function crearLabelUser() {
   const labeluser = document.createElement("label");
   labeluser.setAttribute("for", "usuario");
   labeluser.classList.add("form-label");
-  labeluser.textContent = "Ingresa un usuario : ";
+  labeluser.textContent = "Usuario";
   return labeluser;
 }
 
@@ -213,7 +213,7 @@ function crearLabelPassword() {
   const labelPassword = document.createElement("label");
   labelPassword.setAttribute("for", "password");
   labelPassword.classList.add("form-label");
-  labelPassword.textContent = "Ingresa una contraseña : ";
+  labelPassword.textContent = "Contraseña";
   return labelPassword;
 }
 
@@ -229,7 +229,7 @@ function crearInputPassword() {
 function crearLink() {
   const link = document.createElement("a");
   link.setAttribute("href", "/login/login.html");
-  link.textContent = "<-- Volver Atrás";
+  link.textContent = "Volver Atrás";
   return link;
 }
 
@@ -348,7 +348,7 @@ window.onload = function () {
   btnRegister.setAttribute("type", "submit");
   btnRegister.setAttribute("id", "btnSubmit");
   btnRegister.classList.add("btn", "btn-primary", "w-100");
-  btnRegister.textContent = "Registrate";
+  btnRegister.textContent = "Regístrate";
   form.appendChild(btnRegister);
   form.appendChild(crearLink());
 
