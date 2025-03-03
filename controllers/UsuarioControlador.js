@@ -95,15 +95,18 @@ const verificarLogin = async (req, res) => {
       maxAge: 3600000 // validez de la cookie (1h)
     });
 
+    
     // Devolvemos todos los datos del usuario (excepto la contraseña)
-    const datosUsuario = {
+    let datosUsuario = {
       id: verificarUsuario._id,
+      nombre: verificarUsuario.nombre,
+      ciudad: verificarUsuario.ciudad,
     };
-
+   
     return res.status(200).json({
       mensaje: "Éxito al iniciar sesión",
       token,
-      usuario: datosUsuario, // Devolvemos todos los datos del usuario
+      datos: datosUsuario, // Devolvemos todos los datos del usuario
     });
 
   } catch (error) {
@@ -112,9 +115,11 @@ const verificarLogin = async (req, res) => {
   }
 };
 
+/*
 // Funcion que obtiene los datos del usuario logeado 
 const obtenerDatosUsuario = async (req, res) => {
   try {
+
     // Recuperamos el id de la solicitud
     const usuarioId = req.params.id;
     // Busca en la base de datos un usuario con el id proporcionado
@@ -139,6 +144,7 @@ const obtenerDatosUsuario = async (req, res) => {
     res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 }
+*/
 
 // Función para modificar los datos de un usuario
 const modificarUsuario = async (req, res) => {
@@ -202,6 +208,6 @@ const modificarUsuario = async (req, res) => {
 module.exports = {
   addNuevoUsuario,
   verificarLogin,
-  obtenerDatosUsuario,
+  //obtenerDatosUsuario,
   modificarUsuario,
 };

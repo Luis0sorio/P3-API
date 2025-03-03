@@ -3,11 +3,15 @@
 // Si no existe, seguimos en la ventana del login
 let tipos=["Music", "Sports", "Theater", "Comedy", "Arts","Festivals","Musicals","Family"];
 
-const nombreUsuario = localStorage.getItem('nombreUser');
+let datos= JSON.parse(localStorage.getItem("datosUser"));
+
+const nombreUsuario = datos.nombre;
 console.log(nombreUsuario);
 
 let marcadores=[];//guardamos los marcadores aqui
-let ciudaD="Houston";//aki va a ir el valor de la ciudad para q no se me sobreescriba//actualizacion, esto se va fuera,obtener la ciudadde la bbdd 
+let ciudaD=null;//lo ponemos en null, si al fitrar algo en el tipo miramos la ciudad y esta en null será q no ha buscado en el buscador de los filtros nada, asi q usamos
+//el valor de ciudaduser, si n ps utilizamos esta
+const ciudaduser=datos.ciudad;//eesto va a ser la ciudad q tenga el user en la bbdd
 
 // if (!nombreUsuario) {
 //     window.location.href = '/login/login.html';
@@ -135,26 +139,44 @@ function diviFil() {
     select.setAttribute("id","tpos");
     select.setAttribute("name","tipos");
 
+    //añadimos un todo:
+    let tdo=document.createElement("option");
+    tdo.textContent = "Todo";
+    tdo.setAttribute("value","todo");
+
     tipos.forEach(tipillos => {
-        let tipo=document.createElement("option");
-        tipo.textContent = tipillos;
-        tipo.setAttribute("value",tipillos);
-        select.appendChild(tipo);
+      let tipo=document.createElement("option");
+      tipo.textContent = tipillos;
+      tipo.setAttribute("value",tipillos);
+      select.appendChild(tipo);
     });
+    select.appendChild(tdo);//añadimos al filtro la opcion Todo
+
     select.selectedIndex = -1;
     divFlitro.appendChild(select);
     body.appendChild(divFlitro);
 
-    select.addEventListener("change", function() {//se se selecciona algo 
-        //vaciamos todo
-        let tipoSeleccionado = select.value;
-        console.log("eleccionnnn", select.value);
-        obtenerDatosTickmaster(tipoSeleccionado," Barcelona");//llamamos otra vez y pasamos el tipo,mirar como hacer pra guardar la ciudad
-    });
+  select.addEventListener("change", function() {//cada q se selecciona algo 
+    let tipoSeleccionado = select.value;//obtenemos el tipo seleccionado
+    if (tipoSeleccionado == "todo") {//si el tipo es todo,pasamos al fltro null 
+      obtenerDatosTickmaster(null,ciudadQ());//pasamos un null enla zona de tipo y ya
+    } else {
+      //console.log("eleccionnnn", select.value);
+      obtenerDatosTickmaster(tipoSeleccionado,ciudadQ());//pasamos el tipo seleccionado
+    }
+  });
+}
+
+//saber q ciudad mandar
+function ciudadQ() {
+  if (ciudaD != null) {//si n es null significa q el usuario se ha movido
+    return ciudaD;//pasamos la variable ciudad q se va actualizando cn el filtro
+  } else {
+    return ciudaduser;//pasamos el tipo d ciudad q tiene el valor de la ciudad original de la bbdd
+  }
 }
 
 //cargar los archivos para el MapBox
-
 function cargarMapbox(){
     const linkcss = document.createElement("link");
     linkcss.setAttribute("href","https://api.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.css");
@@ -185,7 +207,6 @@ function cargarBuscador() {
 }
 
 //Configurar el mapa
-
 function configurarMapa() {
   mapboxgl.accessToken =
     "pk.eyJ1IjoibWFpazEyNCIsImEiOiJjbTcwczVmeGowNGpsMmpzbmlybmpuajByIn0.s2p0IIfjzS1fGa52vRd4iQ";
@@ -240,8 +261,9 @@ function configurarBuscador() {
       center: center,
       zoom: 12,
     });
-    console.log(`Ciudad seleccionada: ${ e.result.text}`);//obteenmos la ciudad elegida
-    obtenerDatosTickmaster(null,e.result.text);
+    ciudaD=e.result.text;//actualizamos el valor de la variable con la ciudad elegida
+    //console.log(`Ciudad seleccionada: ${ e.result.text}`);
+    obtenerDatosTickmaster(null,ciudaD);//cada vez q el valor de el filtro cambie llamamos a la funcion y le pasamos la ciudad
   });
 }
 
@@ -251,6 +273,7 @@ function elimMarcadores() {
     });
     marcadores = []; //vacio el array de marcadores
 }
+
 function mostrarPopUp(mensaje) {
 
   const popup = document.createElement("div");
@@ -297,16 +320,33 @@ function mostrarPopUp(mensaje) {
 
 }
 
+
 function obtenerDatosTickmaster(tipo,ciudad) {
     const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
     let url=`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&radius=10&size=50`
+
     if (tipo != null) {
-        url +=`&classificationName=${tipo}`;
+      url +=`&classificationName=${tipo}`;
     }
     if (ciudad != null) {
-        url += `&city=${ciudad}`
+      url += `&city=${ciudad}`
     }
+    
     fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data._embedded && data._embedded.events) {//si la respuesta tiene el campo _embedded.events, mostramos eventos  ///data._embedded.events-->es un array
+          mostrarEventos(data._embedded.events);
+        } else {
+          console.log('No se encontraron eventos.');//hacer un pop-up
+          console.log(data);//hacer un pop-up
+          mostrarEventos([]);//le pasamos el array vacio y asi n pinta nada
+        }
+      })
+      .catch(error => {
+        console.log('Error al obtener los eventos:', error);
+        console.error(error);
+      });//mirar el manejo de erroes para avisar si no hay eventos o si hay algún error.
         .then(response => response.json())
         .then(data => {
             if (data._embedded && data._embedded.events) {//si la respuesta tiene el campo _embedded.events, mostramos eventos
@@ -408,10 +448,11 @@ function obtenerTipoEvento(evento) {
 
 // ***** SALMA SALMA SALMA *****
 async function cerrarSesion() {
-
+  //eliminar localS
 }
+
 //llamada a window onload que carga las funciones
 window.onload = function () {
   initMapa();
-  obtenerDatosTickmaster();
+  obtenerDatosTickmaster(null,ciudaduser);//llamamos a la funcion y le pasamos la ciudad q el usuario tenga en la bbdd, q de momento he  puesto q sea berlin
 };
