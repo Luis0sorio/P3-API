@@ -273,9 +273,54 @@ function elimMarcadores() {
     });
     marcadores = []; //vacio el array de marcadores
 }
-function popUp(error) {
-  
+
+function mostrarPopUp(mensaje) {
+
+  const popup = document.createElement("div");
+  popup.classList.add("modal");
+
+  const exitePopUp = document.querySelector(".modal");
+  if (exitePopUp) {
+    //si exite el popup, no duplicara el popup
+    return;
+  }
+
+  const poupContent = document.createElement("div");
+  poupContent.classList.add("modal-content");
+
+  const closeBtn = document.createElement("button");
+  closeBtn.classList.add("close");
+  closeBtn.textContent = "X";
+
+  const message = document.createElement("p");
+  message.textContent = mensaje;
+
+  //agregar los elementos
+
+  poupContent.appendChild(closeBtn);
+  poupContent.appendChild(message);
+  popup.appendChild(poupContent);
+
+  document.body.appendChild(popup);
+
+  popup.style.display = "block";
+
+
+  closeBtn.addEventListener("click", function (event) {
+    popup.style.display = "none";
+    document.body.removeChild(popup);
+  });
+
+  setTimeout(function(){
+    if (popup.style.display !== "none") {
+      popup.style.display = "none";
+      document.body.removeChild(popup);
+    }
+  }, 3000);
+
 }
+
+
 function obtenerDatosTickmaster(tipo,ciudad) {
     const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
     let url=`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&radius=10&size=50`
@@ -295,6 +340,7 @@ function obtenerDatosTickmaster(tipo,ciudad) {
             } else {
                 console.log('No se encontraron eventos.');//hacer un pop-up
                 console.log(data);//hacer un pop-up
+                mostrarEventos([]);
             }
         })
         .catch(error => {
