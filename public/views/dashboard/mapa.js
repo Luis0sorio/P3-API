@@ -347,18 +347,6 @@ function obtenerDatosTickmaster(tipo,ciudad) {
         console.log('Error al obtener los eventos:', error);
         console.error(error);
       });//mirar el manejo de erroes para avisar si no hay eventos o si hay algún error.
-        .then(response => response.json())
-        .then(data => {
-            if (data._embedded && data._embedded.events) {//si la respuesta tiene el campo _embedded.events, mostramos eventos
-                mostrarEventos(data._embedded.events);
-            } else {
-              mostrarPopUp('No se encontraron eventos.');//hacer un pop-up
-              console.log(data);//hacer un pop-up
-            }
-        })
-        .catch(error => {
-            console.log('Error al obtener los eventos:', error);
-        });//mirar el manejo de erroes para avisar si no hay eventos o si hay algún error.
 }
     
 ///////////
