@@ -1,3 +1,4 @@
+const id=null;
 // funcion que crea el div del formulario y luego devuelve el contenedor principal
 function createDivForm() {
   const divForm = document.createElement("div");
@@ -17,7 +18,6 @@ function createForm() {
   return form;
 }
 
-//funcion que crea y devuelve el titulo del formulario
 //funcion que crea y devuelve el titulo del formulario
 function createTitle() {
   const title = document.createElement("h2");
@@ -192,18 +192,21 @@ async function inicioSesion(usuario) {
 
     console.log(data.mensaje);
     errores(null); //llamamos otra vez a la función
+
     localStorage.setItem("nombreUser", usuario.usuario); //guardamos el nombre del usuario
     localStorage.setItem("token", data.token); // Guardamos el token en localStorage
+
+    obtenerDatosUser(data.id);
+
     window.location.href = "/dashboard/index.html"; //redirigimos
   } catch (error) {
     errores(error); //llamamos a la funcion y le pasamos el error
   }
 }
-////fetch para obtener info,mirar donde pnerlo
-/*
-async function obtenerDatosUser(usuario) {
+
+async function obtenerDatosUser(id) {
   try {
-    const response = await fetch(`/api/usuario/${usuario}`, {
+    const response = await fetch(`/api/usuario/${id}`, {
       method: "GET",
     });
     const data=await response.json();
@@ -211,10 +214,9 @@ async function obtenerDatosUser(usuario) {
     if (!response.ok) {
       throw new Error(data.mensaje);//lanzamos el error
     }
-
+    localStorage.setItem("datosUser", data); //guardamos los datos del usuario
     return data;
   } catch (error) {
     console.log(error);
   }
 }
-*/
