@@ -234,9 +234,9 @@ function crearLink() {
 }
 
 // Función para manejar el registro del usuario
-async function registro(usuarioR) {
+async function registro(usuarioR,form) {
   try {
-    const response = await fetch("http://localhost:3000/api/insercionUsuario", {
+    const response = await fetch("/api/insercionUsuario", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(usuarioR),
@@ -248,12 +248,79 @@ async function registro(usuarioR) {
 
     const data = await response.json();
     console.log("Respuesta recibida ", data);
-    form.reset();
+    if (form) {
+      form.reset();
+    }
     window.location.href = "/login/login.html";
   } catch (error) {
     console.error(error);
   }
 }
+
+//++++++++++++++++++
+function mostrarPopUp(mensaje) {
+
+  
+
+  const popup = document.createElement("div");
+  popup.classList.add("modal");
+
+  const exitePopUp = document.querySelector(".modal");
+  if (exitePopUp) {
+    //si exite el popup, no duplicara el popup
+    return;
+  }
+
+  const poupContent = document.createElement("div");
+  poupContent.classList.add("modal-content");
+
+  const closeBtn = document.createElement("button");
+  closeBtn.classList.add("close");
+  closeBtn.textContent = "X";
+
+  const message = document.createElement("p");
+  message.textContent = mensaje;
+
+  //agregar los elementos
+
+  poupContent.appendChild(closeBtn);
+  poupContent.appendChild(message);
+  popup.appendChild(poupContent);
+
+  document.body.appendChild(popup);
+
+  popup.style.display = "block";
+
+
+  closeBtn.addEventListener("click", function (event) {
+    popup.style.display = "none";
+    document.body.removeChild(popup);
+  });
+
+  setTimeout(function(){
+    if (popup.style.display !== "none") {
+      popup.style.display = "none";
+      document.body.removeChild(popup);
+    }
+  }, 3000);
+
+}
+
+function emailRegex() {
+  const email = document.getElementById("email").value;
+  const emailRegex = /^[\w.-]+@[\w.-]+.[a-zA-Z]{2,}$/;
+
+  return emailRegex.test(email);
+}
+
+function passwordRegex() {
+  const pass = document.getElementById("password").value;
+  const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{5,8}$/;
+
+  return passRegex.test(pass);
+
+}
+//++++++++++++++++++
 
 // Función principal que se ejecuta al cargar la página
 window.onload = function () {
@@ -291,7 +358,7 @@ window.onload = function () {
   const body = document.querySelector("body");
   body.style.backgroundColor = "aqua";
 
-  btnRegister.addEventListener("click", async function (event) {
+  form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const name = inputname.value;
@@ -304,9 +371,22 @@ window.onload = function () {
     const password = document.getElementById("password").value;
 
     if (!name || !apell1 || !pais || !ciudad || !email || !usuario || !password) {
-      alert("Todos los campos son obligatorios");
+      mostrarPopUp("Todos los campos son obligatorios");
       return;
     }
+    //-------------------------
+    const emailValido = emailRegex();
+    if(!emailValido){
+      mostrarPopUp("Por favor ingresa un email valido");
+      return;
+    }
+
+    const passValida = passwordRegex();
+    if(!passValida){
+      mostrarPopUp("Por favor ingresa una contraseña valida (con una Mayuscula, una Minuscula  y un Numero)");
+      return;
+    }
+    //-------------------------
 
     const usuarioR = { nombre: name, apellido1: apell1, apellido2: apell2, pais: pais, ciudad: ciudad, email: email, usuario: usuario, password: password };
     registro(usuarioR);
