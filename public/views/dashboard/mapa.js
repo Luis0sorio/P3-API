@@ -427,6 +427,7 @@ function mostrarEventos(eventos) {
   });
 
 }
+
 async function aniadirFav(usuarioId,evento) {
   try {
     const response = await fetch(`/api/aniadirFav/${usuarioId}`, {
