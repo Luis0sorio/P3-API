@@ -95,3 +95,7 @@ body{
 .form-checkbox input {
     margin-right: 5px;
 }
+
+button {
+    margin-top: 5px;
+}

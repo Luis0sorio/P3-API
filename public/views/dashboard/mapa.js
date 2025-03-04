@@ -476,9 +476,6 @@ async function cerrarSesion() {
   } catch (error) {
     console.error('Error en la solicitud:', error);
   }
-  //eliminar localS
-  //localStorage.removeItem("datosUser");
-  //window.location.href = "/"; //redirigimos
 }
 
 //llamada a window onload que carga las funciones

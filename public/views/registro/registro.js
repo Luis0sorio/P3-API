@@ -308,6 +308,7 @@ function mostrarPopUp(mensaje) {
 
 function emailRegex() {
   const email = document.getElementById("email").value;
+  //tiene que tener caracteres , un arroba , un punto , y despues extensiones de dominio
   const emailRegex = /^[\w.-]+@[\w.-]+.[a-zA-Z]{2,}$/;
 
   return emailRegex.test(email);
@@ -315,6 +316,7 @@ function emailRegex() {
 
 function passwordRegex() {
   const pass = document.getElementById("password").value;
+  //debe contener al menos una M,m,1,entre 5 u 8 
   const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{5,8}$/;
 
   return passRegex.test(pass);

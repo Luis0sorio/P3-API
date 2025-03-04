@@ -63,23 +63,23 @@ function createButton(type, text, id) {
   return button;
 }
 
-//funcion que crea el checkbox "Recuerdame"s
-function createCheckbox() {
-  const div = document.createElement("div");
-  div.classList.add("form-checkbox");
+// //funcion que crea el checkbox "Recuerdame"s
+// function createCheckbox() {
+//   const div = document.createElement("div");
+//   div.classList.add("form-checkbox");
 
-  const input = document.createElement("input");
-  input.setAttribute("type","checkbox");
-  input.setAttribute("id","rememberMe");
-  div.appendChild(input);
+//   const input = document.createElement("input");
+//   input.setAttribute("type","checkbox");
+//   input.setAttribute("id","rememberMe");
+//   div.appendChild(input);
 
-  const label = document.createElement("label");
-  label.setAttribute("for","rememberMe");
-  label.textContent = "Recuerdame";
-  div.appendChild(label);
+//   const label = document.createElement("label");
+//   label.setAttribute("for","rememberMe");
+//   label.textContent = "Recuerdame";
+//   div.appendChild(label);
 
-  return div
-}
+//   return div;
+// }
 
 //funcion que crea los enlaces en un href y tambien un texto
 function createLink(href, text) {
@@ -130,10 +130,6 @@ window.onload = function () {
   formContainer.appendChild(labelPassword);
   formContainer.appendChild(inputPassword);
 
-
-  //Agregar el checkbox "Recuerdame"
-  const checkbox = createCheckbox();
-  formContainer.appendChild(checkbox);
 
   // Crear botón de login
   const btnLogin = createButton("submit", "Iniciar Sesión", "btnSubmit");

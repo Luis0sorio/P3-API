@@ -83,8 +83,8 @@ header {
 
 /* Estilo cuando se pasa el ratón por encima */
 #linkAtras:hover {
-  background-color: lightgray;   /* Fondo verde más oscuro */
-  cursor: pointer;             /* Cambiar el cursor a pointer */
+  background-color: lightgray;   
+  cursor: pointer;            
 }
 
 

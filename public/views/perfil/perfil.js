@@ -136,8 +136,10 @@ async function actualizarCampo(campo) {
       // Actualizar el título si se cambió el nombre de usuario
       document.getElementById("titulo").textContent = `Perfil de ${valor}`;
       infoUser.usuario = valor;
+      }else if(campo === "email" ){
+        infoUser.email = valor;
+      }
       localStorage.setItem("datosUser", JSON.stringify(infoUser));
-    }
   } catch (error) {
     alert(error.message);
     console.error(error);
