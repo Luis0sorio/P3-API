@@ -1,6 +1,8 @@
 body{
     background-color: #00bfff;
-    margin: auto;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
 /* Estilos para el contenedor principal */

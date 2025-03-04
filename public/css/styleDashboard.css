@@ -1,6 +1,6 @@
 /*Estilos para el contenedor principal */
 #divTodo {
-    margin-top: 100px;
+    border-top: 1px black solid;
 }
 
 /* Estilo para el mapa */
@@ -12,6 +12,7 @@
 
 /*Estilo para los datos*/
 #datos {
+    margin: 0px auto;
     height: 90vh;
     overflow-y: scroll;
     padding-right: 10px;
@@ -155,31 +156,30 @@ header {
 
 /* Estilo del contenedor de resultados */
 .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder-results {
-    background-color: #ffffff;  /* Fondo blanco */
-    border-radius: 10px; /* Bordes redondeados */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
-    max-height: 300px; /* Altura máxima de los resultados */
-    overflow-y: auto; /* Habilitar scroll si hay más resultados */
-    margin-top: 5px; /* Separación entre el input y la lista */
-    font-family: Arial, sans-serif; /* Fuente moderna */
+    background-color: #ffffff;  
+    border-radius: 10px; 
+    max-height: 300px; 
+    overflow-y: auto; 
+    margin-top: 5px; 
+    font-family: Arial, sans-serif; 
 }
 
 /* Estilo para cada resultado */
 .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder-result {
     display: flex;
     align-items: center;
-    padding: 12px; /* Espaciado interno */
-    border-bottom: 1px solid #f0f0f0; /* Separadores finos entre resultados */
-    font-size: 14px; /* Tamaño de fuente adecuado */
-    color: #333; /* Color de texto */
-    cursor: pointer; /* Hacerlo clickeable */
-    transition: background-color 0.3s ease-in-out; /* Suavizar transición */
+    padding: 12px; 
+    border-bottom: 1px solid #f0f0f0; 
+    font-size: 14px; 
+    color: #333; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease-in-out; 
 }
 
 /* Estilo cuando pasas el ratón por encima de un resultado */
 .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder-result:hover {
-    background-color: #f0f0f0; /* Fondo claro al pasar el ratón */
-    color: #0073e6; /* Cambiar color del texto al pasar */
+    background-color: #f0f0f0; 
+    color: #0073e6; 
 }
 
 
@@ -211,31 +211,30 @@ header {
 
 /* Estilo para el popup */
 .modal {
-    position: fixed;        /* Coloca el popup de manera fija en la pantalla */
-    bottom: 20px;           /* Se coloca a 20px del borde inferior */
-    left: 1640px;           /* Se coloca a 1640px del borde izquierdo */
-    background-color: aqua;  /* Color de fondo azul claro */
-    color: #721c24;         /* Color de texto rojo oscuro */
-    border: 1px solid aqua; /* Borde del popup */
-    border-radius: 5px;     /* Bordes redondeados */
-    padding: 15px;          /* Espaciado interno */
-    font-size: 16px;        /* Tamaño de la fuente */
-    z-index: 1000;          /* Asegúrate de que el popup esté encima de otros elementos */
-    display: none;          /* Inicialmente oculto */
-    width: auto;            /* Ajusta el ancho automáticamente */
-    max-width: 300px;       /* Ancho máximo */
-    word-wrap: break-word;  /* Ajusta el texto largo dentro del contenedor */
-    white-space: normal;    /* Ajuste del texto */
+    position: fixed;
+    top: 70%;      
+    bottom: 20px;           
+    left: 1640px;           
+    color: #721c24;         
+    border-radius: 5px;     
+    padding: 15px;          
+    font-size: 16px;        
+    z-index: 1000;          
+    display: none;          
+    width: auto;            
+    max-width: 300px;       
+    word-wrap: break-word;  
+    white-space: normal;    
 }
 
 /* Estilo para el contenido dentro del popup */
 .modal-content {
-    display: flex;           /* Flexbox para alinear el contenido */
-    justify-content: space-between; /* Alinea el mensaje y el botón */
-    align-items: center;     /* Centra el contenido verticalmente */
-    padding: 10px;           /* Añade padding para un espacio adecuado */
-    height: auto;            /* Deja que la altura se ajuste automáticamente */
-    text-align: center;      /* Alinea el texto al centro */
+    display: flex;           
+    justify-content: space-between; 
+    align-items: center;    
+    padding: 10px;           
+    height: auto;           
+    text-align: center;      
 }
 
 /* Estilo para el botón de cerrar */
@@ -251,4 +250,54 @@ header {
 /* Color de fondo para el botón de cerrar al pasar el ratón */
 .close:hover {
     color: #f5c6cb;
+}
+
+#filtro {
+    position: fixed; 
+    top: 20px; 
+    right: 20px; 
+    width: 250px; 
+    background: linear-gradient(135deg, #6c63ff, #00bcd4); 
+    border-radius: 12px; 
+    padding: 20px; 
+    z-index: 100; 
+    transition: transform 0.3s ease; 
+}
+
+#filtro:hover {
+    transform: scale(1.05); /* Aumenta un poco el tamaño cuando se pasa el ratón */
+}
+
+#lab-filtro {
+    font-family: 'Arial', sans-serif; /* Fuente limpia y moderna */
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#tpos {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #ffffff; /* Fondo claro para el desplegable */
+    color: #333; /* Texto oscuro para mayor legibilidad */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+
+#tpos:hover, #tpos:focus {
+    background-color: #f1f1f1; /* Fondo más claro cuando se pasa el ratón o se enfoca */
+}
+
+#tpos option {
+    padding: 10px;
+    font-size: 16px;
+}
+
+#lab-filtro::after {
+    content: " ▼"; /* Agrega una flecha hacia abajo para indicar que es un desplegable */
 }

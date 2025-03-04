@@ -5,31 +5,31 @@
 
 /* Estilo para el popup */
 .modal {
-    position: fixed;        /* Coloca el popup de manera fija en la pantalla */
-    bottom: 20px;           /* Se coloca a 20px del borde inferior */
-    left: 1640px;           /* Se coloca a 1640px del borde izquierdo */
-    background-color: aqua;  /* Color de fondo azul claro */
-    color: #721c24;         /* Color de texto rojo oscuro */
-    border: 1px solid aqua; /* Borde del popup */
-    border-radius: 5px;     /* Bordes redondeados */
-    padding: 15px;          /* Espaciado interno */
-    font-size: 16px;        /* Tamaño de la fuente */
-    z-index: 1000;          /* Asegúrate de que el popup esté encima de otros elementos */
-    display: none;          /* Inicialmente oculto */
-    width: auto;            /* Ajusta el ancho automáticamente */
-    max-width: 300px;       /* Ancho máximo */
-    word-wrap: break-word;  /* Ajusta el texto largo dentro del contenedor */
-    white-space: normal;    /* Ajuste del texto */
+    position: fixed;       
+    bottom: 20px;           
+    left: 1640px;           
+    background-color: aqua;  
+    color: #721c24;         
+    border: 1px solid aqua; 
+    border-radius: 5px;     
+    padding: 15px;          
+    font-size: 16px;        
+    z-index: 1000;          
+    display: none;         
+    width: auto;            
+    max-width: 300px;      
+    word-wrap: break-word;  
+    white-space: normal;    
 }
 
 /* Estilo para el contenido dentro del popup */
 .modal-content {
-    display: flex;           /* Flexbox para alinear el contenido */
-    justify-content: space-between; /* Alinea el mensaje y el botón */
-    align-items: center;     /* Centra el contenido verticalmente */
-    padding: 10px;           /* Añade padding para un espacio adecuado */
-    height: auto;            /* Deja que la altura se ajuste automáticamente */
-    text-align: center;      /* Alinea el texto al centro */
+    display: flex;           
+    justify-content: space-between; 
+    align-items: center;     
+    padding: 10px;          
+    height: auto;            
+    text-align: center;      
 }
 
 /* Estilo para el botón de cerrar */

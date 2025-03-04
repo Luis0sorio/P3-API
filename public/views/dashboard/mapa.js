@@ -132,6 +132,10 @@ function diviFil() {
     select.setAttribute("id","tpos");
     select.setAttribute("name","tipos");
 
+    const labelFiltro = document.createElement("label");
+    labelFiltro.setAttribute("id","lab-filtro");
+    labelFiltro.textContent = "Filtro";
+  
     //añadimos un todo:
     let tdo=document.createElement("option");
     tdo.textContent = "Todo";
@@ -146,6 +150,7 @@ function diviFil() {
     select.appendChild(tdo);//añadimos al filtro la opcion Todo
 
     select.selectedIndex = -1;
+    divFlitro.appendChild(labelFiltro);
     divFlitro.appendChild(select);
     body.appendChild(divFlitro);
 
@@ -297,7 +302,7 @@ function mostrarPopUp(mensaje) {
       popup.style.display = "none";
       document.body.removeChild(popup);
     }
-  }, 3000);
+  }, 5000);
 
 }
 
@@ -325,6 +330,7 @@ function obtenerDatosTickmaster(tipo,ciudad) {
         })
         .catch(error => {
             console.log('Error al obtener los eventos:', error);
+            mostrarPopUp("Hubo un error al obtener los eventos");
         });//mirar el manejo de erroes para avisar si no hay eventos o si hay algún error.
 }
     
@@ -479,4 +485,5 @@ async function cerrarSesion() {
 window.onload = function () {
   initMapa();
   obtenerDatosTickmaster(null,ciudaduser);//llamamos a la funcion y le pasamos la ciudad q el usuario tenga en la bbdd, q de momento he  puesto q sea berlin
+  mostrarPopUp("Recuerda, es posible que no haya eventos en esta ubicacion, Busca otra ubicacion en el buscador ");
 };
