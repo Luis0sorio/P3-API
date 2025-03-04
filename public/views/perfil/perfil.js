@@ -206,8 +206,8 @@ window.onload = function () {
       if (usuario && usuario !== infoUser.usuario) {
         // Actualizar el título si se cambió el nombre de usuario
         document.getElementById("titulo").textContent = `Perfil de ${usuario}`;
-        infoUser[usuario] = datosActualizados.user; // Actualizar el campo específico
-        infoUser[email] = datosActualizados.email; // Actualizar el campo específico
+        infoUser[usuario] = datosActualizados.user; // Actualiza el campo específico
+        infoUser[email] = datosActualizados.email; // Actualiza el campo específico
         localStorage.setItem("datosUser", JSON.stringify(infoUser));
       }
     } catch (error) {

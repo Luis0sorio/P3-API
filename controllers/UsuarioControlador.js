@@ -104,7 +104,7 @@ const verificarLogin = async (req, res) => {
       usuario: verificarUsuario.usuario,
       email: verificarUsuario.email,
     };
-   
+  
     return res.status(200).json({
       mensaje: "Éxito al iniciar sesión",
       token,
@@ -116,37 +116,6 @@ const verificarLogin = async (req, res) => {
     res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 };
-
-/*
-// Funcion que obtiene los datos del usuario logeado 
-const obtenerDatosUsuario = async (req, res) => {
-  try {
-
-    // Recuperamos el id de la solicitud
-    const usuarioId = req.params.id;
-    // Busca en la base de datos un usuario con el id proporcionado
-    const usuarioExiste = await Usuario.findOne({usuarioId});
-    // Si no existe, mostramos un mensaje de error
-    if (!usuarioExiste) {
-      return res.status(404).json({mensaje : "Usuario no encontrado."});
-    }
-    // Si existe, devuelve la información del usuario
-    res.status(200).json({
-      id: usuarioExiste._id,
-      nombre: usuarioExiste.nombre,
-      apellido1: usuarioExiste.apellido1,
-      apellido2: usuarioExiste.apellido2,
-      pais: usuarioExiste.pais,
-      ciudad: usuarioExiste.ciudad,
-      email: usuarioExiste.email,
-      usuario: usuarioExiste.usuario,
-    });
-  } catch (error) {
-    console.error("Error al obtener los datos del usuario:", error);
-    res.status(500).json({ mensaje: "Error interno del servidor" });
-  }
-}
-*/
 
 // Función para modificar los datos de un usuario
 const modificarUsuario = async (req, res) => {
@@ -205,11 +174,9 @@ const modificarUsuario = async (req, res) => {
   }
 };
 
-
 // Exportamos las funciones para ser utilizadas en otros archivos del proyecto:
 module.exports = {
   addNuevoUsuario,
   verificarLogin,
-  //obtenerDatosUsuario,
   modificarUsuario,
 };

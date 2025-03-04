@@ -2,25 +2,25 @@
 const express = require('express');
 const controladorUsuario = require('../controllers/UsuarioControlador.js');
 const controladorFavorito = require('../controllers/FavoritoControlador.js');
+const controladorAutenticar = require('../controllers/AutenticarControlador.js');
 
 const verificarToken = require('../middleware/MiddlewareAutenticar.js'); // Importar el middleware
 
 // Para poder manejar la API creamos un objeto que permite definir rutas con express
 const rutas = express.Router();
 
-// llamamos a la función que maneja la lógica de inserción
+// rutas para la navegación de un usuario verificado
 rutas.post('/insercionUsuario', controladorUsuario.addNuevoUsuario);
-// llamamos a la funcion que maneja la validacion de inicio de sesión
 rutas.post('/login', controladorUsuario.verificarLogin);
-// usamos una ruta parametrizada y llamamos a la funcion correspondiente
-//rutas.get('/usuario/:id', verificarToken, controladorUsuario.obtenerDatosUsuario);
-// modificamos los datos del usuario
 rutas.put('/usuario', verificarToken, controladorUsuario.modificarUsuario);
 
 // rutas para los favoritos del usuario
 rutas.post('/favoritos', verificarToken, controladorFavorito.añadirFavorito);
 rutas.get('/listaFavoritos', verificarToken, controladorFavorito.listaFavoritos);
-//rutas.delete('/favoritos/:usuarioId/:eventoId', verificarToken, controladorFavorito.eliminarFavorito);
 rutas.delete('/borrarFavoritos/:eventoId', verificarToken, controladorFavorito.eliminarFavorito);
+
+// ruta para el cierre de sesión
+rutas.post('/logout', controladorAutenticar.logout);
+
 // exportamos las rutas
 module.exports = rutas;

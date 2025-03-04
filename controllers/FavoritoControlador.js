@@ -32,10 +32,11 @@ const añadirFavorito = async (req, res) => {
   }
 }
 
-// Función que eliminar un evento de los favoritos
+// Función que elimina un evento de los favoritos
 const eliminarFavorito = async (req, res) => {
   try { 
-    const { usuarioId, eventoId } = req.params;
+    const usuarioId = req.usuario.id;
+    const eventoId = req.params.eventoId;
 
     const usuario = await Usuario.findById(usuarioId);
     if (!usuario) {
@@ -57,7 +58,6 @@ const eliminarFavorito = async (req, res) => {
 const listaFavoritos = async (req, res) => {
   try {
     const usuarioId  = req.usuario.id;
-    //const usuarioId  = req.params.usuarioId;
 
     // Buscar el usuario y obtener sus favoritos
     const usuario = await Usuario.findById(usuarioId);

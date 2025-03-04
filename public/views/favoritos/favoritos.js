@@ -3,8 +3,8 @@ const nav = document.querySelector("nav");
 const main = document.querySelector("main");
 
 function inicializar() {
-    crearHeader();
-    crearContenedor(); // Llamamos a la función que crea la estructura con solo los dos divs
+  crearHeader();
+  crearContenedor(); // Llamamos a la función que crea la estructura con solo los dos divs
 }
 
 function crearHeader() {
@@ -102,23 +102,6 @@ function mostrarFavoritos(favoritos) {
 
     const venue = evento._embedded?.venues?.[0];
 
-    /*
-    const eventoHTML = `
-      <div class="evento-favorito">
-        <div class="evento-info">
-          <div class="evento-info-imagen">
-            <img src="${evento.imagen}" alt="${evento.name}" class="evento-imagen" />
-          </div>
-          <div class="evento-info-texto">
-            <p><strong>${evento.name}</strong></p>
-            <p>${evento.dates.start.localDate} - ${evento.dates.start.localTime}</p>
-            <p>${evento._embedded.venues[0].name} - ${evento._embedded.venues[0].city.name} - ${evento._embedded.venues[0].country.name}</p>
-          </div>
-          <button class="eliminar-favorito" data-event-id="${evento._id}">Eliminar de favoritos</button>
-        </div>
-      </div>
-    `;
-    */
     const eventoHTML = `
       <div class="evento-favorito">
         <div class="evento-info">
