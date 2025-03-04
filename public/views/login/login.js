@@ -191,7 +191,7 @@ async function inicioSesion(usuario) {
     }
 
     console.log(data.mensaje);
-    errores(null); //llamamos otra vez a la función
+    errores(); //llamamos otra vez a la función
 
     localStorage.setItem("datosUser", JSON.stringify(data.datos)); //guardamos los datos
     //localStorage.setItem("access_token", data.token); // Guardamos el token en localStorage
@@ -201,27 +201,3 @@ async function inicioSesion(usuario) {
     errores(error); //llamamos a la funcion y le pasamos el error
   }
 }
-/*
-async function obtenerDatosUser(id) {
-  const token = localStorage.getItem("token");
-  console.log("Token recibido:", token);
-  try {
-    const response = await fetch(`/api/usuario/${id}`, {
-      method: "GET",
-      credentials: 'include',
-      headers: {
-        "Authorization": `Bearer ${token}`,  // Enviar el token como Bearer Token
-      },
-    });
-    const data=await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.mensaje);//lanzamos el error
-    }
-    localStorage.setItem("datosUser", data); //guardamos los datos del usuario
-    console.log(data);
-  } catch (error) {
-    console.log(error);
-  }
-}
-*/

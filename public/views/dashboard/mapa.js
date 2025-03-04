@@ -45,7 +45,7 @@ function crearHeader() {
   const datosli = [
     { name: "Editar Perfil", link: "/views/perfil/perfil.html", icon: "fas fa-cogs" },
     { name: "Favoritos", link: "/views/favoritos/favoritos.html", icon: "fas fa-star" },
-    { name: "Cerrar Sesion", link: "/", icon: "fas fa-power-off" },
+    { name: "Cerrar Sesion", link: "/", icon: "fas fa-power-off" ,id:"logout"},
   ];
 
   const ul = document.createElement("ul");
@@ -58,6 +58,10 @@ function crearHeader() {
     a.setAttribute("id", "aNav");
     a.textContent = datosli.name;
     a.href = datosli.link;
+
+    if (datosli.id) {
+      a.setAttribute("id",datosli.id);
+    }
 
     if (datosli.icon) {
       const icon = document.createElement("i");
@@ -74,6 +78,10 @@ function crearHeader() {
   divNav.setAttribute("class", "divNav");
   divNav.appendChild(ul);
   header.appendChild(divNav);
+  document.getElementById("logout").addEventListener("click",  (event)=> {
+    event.preventDefault();
+    cerrarSesion();
+  });
 }
 
 // // Añadir el nombre del usuario en el header
@@ -381,8 +389,8 @@ function mostrarEventos(eventos) {
             <i class="fas fa-star favorito"
               data-event-id="${evento.id}"
               data-event-name="${evento.name}"
-              data-event-date='${JSON.stringify(evento.dates).replace(/'/g, "&apos;")}'
-              data-event-embedded='${JSON.stringify(evento._embedded).replace(/'/g, "&apos;")}'
+              data-event-date='${encodeURIComponent(JSON.stringify(evento.dates))}'
+              data-event-embedded='${encodeURIComponent(JSON.stringify(evento._embedded))}'
               data-event-url="${evento.url}"
               data-event-imagen="${evento.images[0].url}">
             </i>
@@ -435,10 +443,17 @@ function mostrarEventos(eventos) {
     
         const eventoId = favorito.getAttribute("data-event-id");
         const eventoName = favorito.getAttribute("data-event-name");
-        const eventoDate = JSON.parse(favorito.getAttribute("data-event-date"));
-        const eventoEmbedded = JSON.parse(favorito.getAttribute("data-event-embedded"));
+        let eventoDate, eventoEmbedded;
         const eventoUrl = favorito.getAttribute("data-event-url");
         const eventoImagen = favorito.getAttribute("data-event-imagen");
+
+        try {
+          eventoDate = JSON.parse(decodeURIComponent(favorito.getAttribute("data-event-date")));
+          eventoEmbedded = JSON.parse(decodeURIComponent(favorito.getAttribute("data-event-embedded")));
+        } catch (error) {
+          console.error('Error al aprsear JSON ', error);
+          return;
+        }
       
         
         if (favorito.classList.contains("fa-star")) {
@@ -460,11 +475,12 @@ function mostrarEventos(eventos) {
         }
       } else {
         // Eliminar de favoritos
-        const response = await fetch(`http://localhost:3000/api/favoritos/${eventoId}`, {
+        const response = await fetch(`http://localhost:3000/api/borrarFavoritos/${eventoId}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
-          }
+          },
+          credentials: 'include',
         });
   
         if (response.ok) {
@@ -477,28 +493,6 @@ function mostrarEventos(eventos) {
 
 }
 
-async function aniadirFav(usuarioId,evento) {
-  try {
-    const response = await fetch(`/api/aniadirFav/${usuarioId}`, {
-      method: "PUT",
-      credentials: 'include',
-      headers: {
-        "Authorization": `Bearer ${token}`,  // Enviar el token como Bearer Token
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(evento),//enviamos el objeto evento
-    });
-    const data=await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.mensaje);//lanzamos el error
-    }
-    console.log(data.mensaje);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 //funcion para obtener los tipos de eventos de tickmaster
 
 function obtenerTipoEvento(evento) {
@@ -509,7 +503,27 @@ function obtenerTipoEvento(evento) {
 
 // ***** SALMA SALMA SALMA *****
 async function cerrarSesion() {
+  try {
+    const response = await fetch('http://localhost:3000/api/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', // Incluir cookies en la solicitud
+    });
+
+    if (response.ok) {
+      // Redirigir al usuario a la página de inicio de sesión
+      window.location.href = '/views/login/login.html';
+    } else {
+      console.error('Error al cerrar sesión:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+  }
   //eliminar localS
+  //localStorage.removeItem("datosUser");
+  //window.location.href = "/"; //redirigimos
 }
 
 //llamada a window onload que carga las funciones

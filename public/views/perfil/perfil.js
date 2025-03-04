@@ -186,34 +186,6 @@ window.onload = function () {
       email,
       password,
     };
-
-    try {
-      // Enviar los datos actualizados al backend
-      const respuesta = await fetch("/api/usuario", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(datosActualizados),
-      });
-
-      const data = await respuesta.json();
-      if (!respuesta.ok) {
-        throw new Error(data.mensaje);
-      }
-
-      alert("Perfil actualizado con éxito");
-      if (usuario && usuario !== infoUser.usuario) {
-        // Actualizar el título si se cambió el nombre de usuario
-        document.getElementById("titulo").textContent = `Perfil de ${usuario}`;
-        infoUser[usuario] = datosActualizados.user; // Actualizar el campo específico
-        infoUser[email] = datosActualizados.email; // Actualizar el campo específico
-        localStorage.setItem("datosUser", JSON.stringify(infoUser));
-      }
-    } catch (error) {
-      alert(error.message);
-      console.error(error);
-    }
   });
 
   enlaceMapa();

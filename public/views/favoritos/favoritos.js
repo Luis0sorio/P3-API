@@ -143,7 +143,7 @@ function mostrarFavoritos(favoritos) {
   botonEliminar.forEach((boton) => {
     boton.addEventListener("click", async function () {
       const eventoId = boton.getAttribute("data-event-id");
-
+      console.log(eventoId);
       try {
         const response = await fetch(`http://localhost:3000/api/borrarFavoritos/${eventoId}`, {
           method: 'DELETE',
@@ -157,7 +157,7 @@ function mostrarFavoritos(favoritos) {
           // Recargar la lista de favoritos después de eliminar
           cargarFavoritos();
         } else {
-          console.error('Error al eliminar el favorito:', response.statusText);
+          console.error('Error al eliminar el favorito:', response.mensaje);
         }
       } catch (error) {
         console.error('Error en la solicitud:', error);
