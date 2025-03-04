@@ -40,11 +40,7 @@ function crearHeader() {
   const datosli = [
     { name: "Editar Perfil", link: "/views/perfil/perfil.html", icon: "fas fa-cogs" },
     { name: "Favoritos", link: "/views/favoritos/favoritos.html", icon: "fas fa-star" },
-<<<<<<< HEAD
-    { name: "Cerrar Sesion", link: "#", icon: "fas fa-power-off", id: "logout"},
-=======
     { name: "Cerrar Sesion", link: "/", icon: "fas fa-power-off" ,id:"logout"},
->>>>>>> main
   ];
 
   const ul = document.createElement("ul");
@@ -59,11 +55,7 @@ function crearHeader() {
     a.href = datosli.link;
 
     if (datosli.id) {
-<<<<<<< HEAD
-      a.setAttribute("id", datosli.id);
-=======
       a.setAttribute("id",datosli.id);
->>>>>>> main
     }
 
     if (datosli.icon) {
@@ -81,13 +73,7 @@ function crearHeader() {
   divNav.setAttribute("class", "divNav");
   divNav.appendChild(ul);
   header.appendChild(divNav);
-<<<<<<< HEAD
-
-  // evento de logout
-  document.getElementById("logout").addEventListener("click", (event) => {
-=======
   document.getElementById("logout").addEventListener("click",  (event)=> {
->>>>>>> main
     event.preventDefault();
     cerrarSesion();
   });
@@ -420,12 +406,6 @@ function mostrarEventos(eventos) {
           console.error('Error al aprsear JSON ', error);
           return;
         }
-<<<<<<< HEAD
-
-=======
-      
-        
->>>>>>> main
         if (favorito.classList.contains("fa-star")) {
         // Añadir a favoritos
         const response = await fetch('http://localhost:3000/api/favoritos', {
