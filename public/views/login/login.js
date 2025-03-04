@@ -194,7 +194,7 @@ async function inicioSesion(usuario) {
     errores(null); //llamamos otra vez a la función
 
     localStorage.setItem("datosUser", JSON.stringify(data.datos)); //guardamos los datos
-    localStorage.setItem("token", data.token); // Guardamos el token en localStorage
+    //localStorage.setItem("access_token", data.token); // Guardamos el token en localStorage
 
    window.location.href = "/dashboard/index.html"; //redirigimos
   } catch (error) {
