@@ -35,7 +35,8 @@ const añadirFavorito = async (req, res) => {
 // Función que eliminar un evento de los favoritos
 const eliminarFavorito = async (req, res) => {
   try { 
-    const { usuarioId, eventoId } = req.params;
+    const usuarioId  = req.usuario.id;
+    const eventoId = req.params.eventoId;
 
     const usuario = await Usuario.findById(usuarioId);
     if (!usuario) {
