@@ -24,20 +24,8 @@ const esTokenInvalido = async (token) => {
     throw error;
   }
 }
-/*
-// Función para eliminar un token de la lista negra
-const eliminarToken = async (token) => {
-  try {
-    await Token.deleteOne({ token });
-    console.log('Token eliminado de la lista negra:', token);
-  } catch (error) {
-    console.error('Error al eliminar token de la lista negra:', error);
-    throw error;
-  }
-};
-*/
+
 module.exports = {
   agregarToken,
   esTokenInvalido,
-  //eliminarToken,
 };

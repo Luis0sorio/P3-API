@@ -13,10 +13,6 @@ let ciudaD=null;//lo ponemos en null, si al fitrar algo en el tipo miramos la ci
 //el valor de ciudaduser, si n ps utilizamos esta
 const ciudaduser=datos.ciudad;//eesto va a ser la ciudad q tenga el user en la bbdd
 
-// if (!nombreUsuario) {
-//     window.location.href = '/login/login.html';
-// }
-
 // Localizar el body
 //Inicializacion del mapa y elementos del index.html
 let map;
@@ -26,7 +22,6 @@ const main = document.querySelector("main");
 const head = document.querySelector("head");
 
 //funcion para inicializar la configuracion del mapa
-
 function initMapa(){
    // agregarTituloUsuario();
     diviFil();
@@ -45,7 +40,7 @@ function crearHeader() {
   const datosli = [
     { name: "Editar Perfil", link: "/views/perfil/perfil.html", icon: "fas fa-cogs" },
     { name: "Favoritos", link: "/views/favoritos/favoritos.html", icon: "fas fa-star" },
-    { name: "Cerrar Sesion", link: "/", icon: "fas fa-power-off" },
+    { name: "Cerrar Sesion", link: "/", icon: "fas fa-power-off" ,id:"logout"},
   ];
 
   const ul = document.createElement("ul");
@@ -58,6 +53,10 @@ function crearHeader() {
     a.setAttribute("id", "aNav");
     a.textContent = datosli.name;
     a.href = datosli.link;
+
+    if (datosli.id) {
+      a.setAttribute("id",datosli.id);
+    }
 
     if (datosli.icon) {
       const icon = document.createElement("i");
@@ -74,17 +73,11 @@ function crearHeader() {
   divNav.setAttribute("class", "divNav");
   divNav.appendChild(ul);
   header.appendChild(divNav);
+  document.getElementById("logout").addEventListener("click",  (event)=> {
+    event.preventDefault();
+    cerrarSesion();
+  });
 }
-
-// // Añadir el nombre del usuario en el header
-// const h2 = document.createElement("h2");
-// h2.setAttribute("id", "titulo");
-
-// let nombreU=localStorage.getItem("nombreUser");//accedemos al nombre del usuario
-
-// h2.textContent = `Hola ${nombreU}`;//personalizamos el saludo
-// header.appendChild(h2);
-// body.appendChild(header);
 
 //funcion para configurar el mapa y el buscador
 function agregarMapayBusqueda() {
@@ -234,18 +227,6 @@ function configurarMapa() {
   window.addEventListener("resize", () => map.resize());
 }
 
-//hay que añadir las rutas y objetivo que salga el nombre del usuario
-
-//METER ESTO EN UNA FUNCION
-
-// Creamos un enlace para redirigir a la ventana de perfil de usuario
-// const perfilUser = document.createElement('a');
-// perfilUser.setAttribute('href', '/views/perfil/perfil.html');
-// perfilUser.textContent = "Editar perfil"
-// perfilUser.setAttribute('target', '_blank'); // hay que cambiar esto
-// header.appendChild(perfilUser);
-
-///// Esto es nuevo
 //Configurar el buscador
 
 function configurarBuscador() {
@@ -325,7 +306,6 @@ function mostrarPopUp(mensaje) {
 
 }
 
-
 function obtenerDatosTickmaster(tipo,ciudad) {
     const apikeyTick = "vykajZlL73mCQ8NHCPW6KbHeCanHcFf5";
     let url=`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apikeyTick}&radius=10&size=50`
@@ -371,12 +351,10 @@ function mostrarEventos(eventos) {
         ? evento.images[0].url
         : "default-image.jpg";
 
-    //li.textContent = `${evento.name} - ${evento.dates.start.localDate} - ${evento.dates.start.localTime} - ${evento._embedded.venues[0].name} - ${evento._embedded.venues[0].city.name} - ${evento._embedded.venues[0].country.name} - ${tipo_event}`;
-
     li.innerHTML = `
-        <div class= "evento-info">
+        <div class="evento-info">
         <div class="evento-info-imagen">
-        <img src="${imagentick}" alt="${evento.name} class "evento-imagen" />
+        <img src="${imagentick}" alt="${evento.name}" class="evento-imagen" />
         </div>
         <div class="evento-info-texto">
         <p><strong>${evento.name}</strong></p>
@@ -384,16 +362,18 @@ function mostrarEventos(eventos) {
         <p>${evento._embedded.venues[0].name} - ${evento._embedded.venues[0].city.name} - ${evento._embedded.venues[0].country.name}</p> 
         </div>
         <div class ="evento-favorito">
-            <i class="fas fa-star favorito" data-event-id="${evento.id}"></i>
+            <i class="fas fa-star favorito"
+              data-event-id="${evento.id}"
+              data-event-name="${evento.name}"
+              data-event-date='${encodeURIComponent(JSON.stringify(evento.dates))}'
+              data-event-embedded='${encodeURIComponent(JSON.stringify(evento._embedded))}'
+              data-event-url="${evento.url}"
+              data-event-imagen="${evento.images[0].url}">
+            </i>
         </div>
         <a href="${evento.url}" target="_blank" class="comprar-entradas">Comprar Entradas </a>
         </div>
         `;
-
-    // const enlace = document.createElement("a");
-    // enlace.href = evento.url;
-    // enlace.textContent = "Comprar Entradas";
-    // enlace.target = "_blank";
 
         // li.appendChild(enlace);
         listaEventos.appendChild(li);
@@ -418,14 +398,51 @@ function mostrarEventos(eventos) {
 
   const favoritos = document.querySelectorAll(".favorito");
   favoritos.forEach((favorito) => {
-    favorito.addEventListener("click", function () {
-        if (favorito.classList.contains("fa-star")) {
-            favorito.classList.remove("fa-star");
-            favorito.classList.add("fa-check");
-        } else {
-            favorito.classList.remove("fa-check");
-            favorito.classList.add("fa-star");
+    favorito.addEventListener("click", async function () {
+        const eventoId = favorito.getAttribute("data-event-id");
+        const eventoName = favorito.getAttribute("data-event-name");
+        let eventoDate, eventoEmbedded;
+        const eventoUrl = favorito.getAttribute("data-event-url");
+        const eventoImagen = favorito.getAttribute("data-event-imagen");
+
+        try {
+          eventoDate = JSON.parse(decodeURIComponent(favorito.getAttribute("data-event-date")));
+          eventoEmbedded = JSON.parse(decodeURIComponent(favorito.getAttribute("data-event-embedded")));
+        } catch (error) {
+          console.error('Error al aprsear JSON ', error);
+          return;
         }
+        if (favorito.classList.contains("fa-star")) {
+        // Añadir a favoritos
+        const response = await fetch('http://localhost:3000/api/favoritos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            
+          },
+          credentials: 'include',
+          body: JSON.stringify({ _id: eventoId, name: eventoName, dates: eventoDate, _embedded: eventoEmbedded, url: eventoUrl, imagen: eventoImagen/*[0].url*/ })
+        });
+  
+        if (response.ok) {
+          favorito.classList.remove("fa-star");
+          favorito.classList.add("fa-check");
+        }
+      } else {
+        // Eliminar de favoritos
+        const response = await fetch(`http://localhost:3000/api/borrarFavoritos/${eventoId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+  
+        if (response.ok) {
+          favorito.classList.remove("fa-check");
+          favorito.classList.add("fa-star");
+        }
+      }
     });
   });
 
@@ -441,7 +458,27 @@ function obtenerTipoEvento(evento) {
 
 // ***** SALMA SALMA SALMA *****
 async function cerrarSesion() {
+  try {
+    const response = await fetch('http://localhost:3000/api/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', // Incluir cookies en la solicitud
+    });
+
+    if (response.ok) {
+      // Redirigir al usuario a la página de inicio de sesión
+      window.location.href = '/views/login/login.html';
+    } else {
+      console.error('Error al cerrar sesión:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+  }
   //eliminar localS
+  //localStorage.removeItem("datosUser");
+  //window.location.href = "/"; //redirigimos
 }
 
 //llamada a window onload que carga las funciones

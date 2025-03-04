@@ -6,7 +6,7 @@ const Usuario = require('../models/Usuario.js');
 const añadirFavorito = async (req, res) => {
 
   try {
-    const { usuarioId } = req.params;
+    const usuarioId  = req.usuario.id;
     const evento = req.body;
 
     const usuario = await Usuario.findById(usuarioId);
@@ -16,7 +16,7 @@ const añadirFavorito = async (req, res) => {
 
     // Verificamos que el evento ya está añadido
     // el método find() recorre el array de favoritos y compara si el id es igual al del evento
-    const eventoExiste = usuario.favoritos.find((fav) => fav.id === evento.id);
+    const eventoExiste = usuario.favoritos.find((fav) => fav._id.toString() === evento._id.toString());
     if (eventoExiste) {
       return res.status(400).json({ mensaje: "El evento ya está en favoritos." });
     }
@@ -32,17 +32,18 @@ const añadirFavorito = async (req, res) => {
   }
 }
 
-// Función que eliminar un evento de los favoritos
+// Función que elimina un evento de los favoritos
 const eliminarFavorito = async (req, res) => {
   try { 
-    const { usuarioId, eventoId } = req.params;
+    const usuarioId = req.usuario.id;
+    const eventoId = req.params.eventoId;
 
     const usuario = await Usuario.findById(usuarioId);
     if (!usuario) {
       return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
     // se genera una copia del array sin el evento a eliminar. Mejora la eficiencia.
-    usuario.favoritos = usuario.favoritos.filter((fav) => fav.id !== eventoId);
+    usuario.favoritos = usuario.favoritos.filter((fav) => fav._id.toString() !== eventoId);
     await usuario.save();
 
     res.status(200).json({ mensaje: 'Evento eliminado de favoritos', favoritos: usuario.favoritos });
@@ -54,9 +55,9 @@ const eliminarFavorito = async (req, res) => {
 }
 
 // Función para obtener la lista de favoritos del usuario
-const listaFavoritos = async () => {
+const listaFavoritos = async (req, res) => {
   try {
-    const { usuarioId } = req.params;
+    const usuarioId  = req.usuario.id;
 
     // Buscar el usuario y obtener sus favoritos
     const usuario = await Usuario.findById(usuarioId);
