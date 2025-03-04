@@ -368,9 +368,9 @@ function mostrarEventos(eventos) {
     //li.textContent = `${evento.name} - ${evento.dates.start.localDate} - ${evento.dates.start.localTime} - ${evento._embedded.venues[0].name} - ${evento._embedded.venues[0].city.name} - ${evento._embedded.venues[0].country.name} - ${tipo_event}`;
 
     li.innerHTML = `
-        <div class= "evento-info">
+        <div class="evento-info">
         <div class="evento-info-imagen">
-        <img src="${imagentick}" alt="${evento.name} class "evento-imagen" />
+        <img src="${imagentick}" alt="${evento.name}" class="evento-imagen" />
         </div>
         <div class="evento-info-texto">
         <p><strong>${evento.name}</strong></p>
@@ -378,7 +378,14 @@ function mostrarEventos(eventos) {
         <p>${evento._embedded.venues[0].name} - ${evento._embedded.venues[0].city.name} - ${evento._embedded.venues[0].country.name}</p> 
         </div>
         <div class ="evento-favorito">
-            <i class="fas fa-star favorito" data-event-id="${evento.id}"></i>
+            <i class="fas fa-star favorito"
+              data-event-id="${evento.id}"
+              data-event-name="${evento.name}"
+              data-event-date='${JSON.stringify(evento.dates).replace(/'/g, "&apos;")}'
+              data-event-embedded='${JSON.stringify(evento._embedded).replace(/'/g, "&apos;")}'
+              data-event-url="${evento.url}"
+              data-event-imagen="${evento.images[0].url}">
+            </i>
         </div>
         <a href="${evento.url}" target="_blank" class="comprar-entradas">Comprar Entradas </a>
         </div>
@@ -412,8 +419,9 @@ function mostrarEventos(eventos) {
 
   const favoritos = document.querySelectorAll(".favorito");
   favoritos.forEach((favorito) => {
-    favorito.addEventListener("click", function () {
-        if (favorito.classList.contains("fa-star")) {//añadir a fav
+    favorito.addEventListener("click", async function () {
+      /*
+        if (favorito.classList.contains("fa-star")) {
             favorito.classList.remove("fa-star");
             favorito.classList.add("fa-check");
             let eventId = favorito.getAttribute("data-event-id"); 
@@ -423,6 +431,47 @@ function mostrarEventos(eventos) {
             favorito.classList.remove("fa-check");
             favorito.classList.add("fa-star");
         }
+      */
+    
+        const eventoId = favorito.getAttribute("data-event-id");
+        const eventoName = favorito.getAttribute("data-event-name");
+        const eventoDate = JSON.parse(favorito.getAttribute("data-event-date"));
+        const eventoEmbedded = JSON.parse(favorito.getAttribute("data-event-embedded"));
+        const eventoUrl = favorito.getAttribute("data-event-url");
+        const eventoImagen = favorito.getAttribute("data-event-imagen");
+      
+        
+        if (favorito.classList.contains("fa-star")) {
+        // Añadir a favoritos
+        
+        const response = await fetch('http://localhost:3000/api/favoritos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            
+          },
+          credentials: 'include',
+          body: JSON.stringify({ _id: eventoId, name: eventoName, dates: eventoDate, _embedded: eventoEmbedded, url: eventoUrl, imagen: eventoImagen/*[0].url*/ })
+        });
+  
+        if (response.ok) {
+          favorito.classList.remove("fa-star");
+          favorito.classList.add("fa-check");
+        }
+      } else {
+        // Eliminar de favoritos
+        const response = await fetch(`http://localhost:3000/api/favoritos/${eventoId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+  
+        if (response.ok) {
+          favorito.classList.remove("fa-check");
+          favorito.classList.add("fa-star");
+        }
+      }
     });
   });
 

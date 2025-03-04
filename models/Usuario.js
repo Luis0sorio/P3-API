@@ -17,7 +17,7 @@ const usuarioSchema = new Schema({
   // Lista de eventos favoritos. Array de objetos (favoritos)
   favoritos: [
     {
-      id: String,// id del evento
+      _id: String,// id del evento
       name: String, // nombre del evento
       dates: {
         start: {
@@ -25,7 +25,7 @@ const usuarioSchema = new Schema({
           localTime: String, // hora evento
         },
       },
-      _embebed: { // informacion adicional
+      _embedded: { // informacion adicional
         venues: [
           {
             name: String, // ubicación

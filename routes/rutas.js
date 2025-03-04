@@ -18,9 +18,9 @@ rutas.post('/login', controladorUsuario.verificarLogin);
 rutas.put('/usuario', verificarToken, controladorUsuario.modificarUsuario);
 
 // rutas para los favoritos del usuario
-rutas.post('/', verificarToken, controladorFavorito.añadirFavorito);
-rutas.get('/', verificarToken, controladorFavorito.listaFavoritos);
-rutas.delete('/', verificarToken, controladorFavorito.eliminarFavorito);
-
+rutas.post('/favoritos', verificarToken, controladorFavorito.añadirFavorito);
+rutas.get('/listaFavoritos', verificarToken, controladorFavorito.listaFavoritos);
+//rutas.delete('/favoritos/:usuarioId/:eventoId', verificarToken, controladorFavorito.eliminarFavorito);
+rutas.delete('/borrarFavoritos/:eventoId', verificarToken, controladorFavorito.eliminarFavorito);
 // exportamos las rutas
 module.exports = rutas;
