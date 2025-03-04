@@ -8,7 +8,7 @@ function formPerfilUsuario() {
 
   const titulo = document.createElement('h1');
   titulo.setAttribute('id', 'titulo');
-  titulo.textContent = `Perfil de ${infoUser.nombre}`;
+  titulo.textContent = `Perfil de ${infoUser.usuario}`;
   div.appendChild(titulo);
 
   const formPerfil = document.createElement('form');
@@ -206,6 +206,9 @@ window.onload = function () {
       if (usuario && usuario !== infoUser.usuario) {
         // Actualizar el título si se cambió el nombre de usuario
         document.getElementById("titulo").textContent = `Perfil de ${usuario}`;
+        infoUser[usuario] = datosActualizados.user; // Actualizar el campo específico
+        infoUser[email] = datosActualizados.email; // Actualizar el campo específico
+        localStorage.setItem("datosUser", JSON.stringify(infoUser));
       }
     } catch (error) {
       alert(error.message);
