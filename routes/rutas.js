@@ -1,6 +1,7 @@
 
 const express = require('express');
 const controladorUsuario = require('../controllers/UsuarioControlador.js');
+const controladorFavorito = require('../controllers/FavoritoControlador.js');
 
 const verificarToken = require('../middleware/MiddlewareAutenticar.js'); // Importar el middleware
 
@@ -16,4 +17,10 @@ rutas.post('/login', controladorUsuario.verificarLogin);
 // modificamos los datos del usuario
 rutas.put('/usuario', verificarToken, controladorUsuario.modificarUsuario);
 
+// rutas para los favoritos del usuario
+rutas.post('/', verificarToken, controladorFavorito.añadirFavorito);
+rutas.get('/', verificarToken, controladorFavorito.listaFavoritos);
+rutas.delete('/', verificarToken, controladorFavorito.eliminarFavorito);
+
+// exportamos las rutas
 module.exports = rutas;
