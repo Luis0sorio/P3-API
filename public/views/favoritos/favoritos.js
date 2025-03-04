@@ -60,6 +60,9 @@ function crearContenedor() {
     divIzq.classList.add("divIzq");
     content.appendChild(divIzq);
 
+    const enlaceAtras = linkAtras();
+    divIzq.appendChild(enlaceAtras);
+
     // Caja derecha
     const divDer = document.createElement("div");
     divDer.classList.add("divDer");
@@ -69,6 +72,16 @@ function crearContenedor() {
 
     // Agregamos el contenedor principal al main
     main.appendChild(container);
+}
+
+function linkAtras() {
+  const linkAtras = document.createElement("a");
+  linkAtras.setAttribute("id","linkAtras");
+  linkAtras.setAttribute("href","../dashboard/index.html");
+  linkAtras.classList.add("class-link-atras");
+  linkAtras.textContent = "< Atrás";
+  return linkAtras;
+
 }
 
 window.onload = function () {
