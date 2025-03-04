@@ -413,9 +413,12 @@ function mostrarEventos(eventos) {
   const favoritos = document.querySelectorAll(".favorito");
   favoritos.forEach((favorito) => {
     favorito.addEventListener("click", function () {
-        if (favorito.classList.contains("fa-star")) {
+        if (favorito.classList.contains("fa-star")) {//añadir a fav
             favorito.classList.remove("fa-star");
             favorito.classList.add("fa-check");
+            let eventId = favorito.getAttribute("data-event-id"); 
+            console.log(eventId);
+
         } else {
             favorito.classList.remove("fa-check");
             favorito.classList.add("fa-star");
@@ -423,6 +426,27 @@ function mostrarEventos(eventos) {
     });
   });
 
+}
+async function aniadirFav(usuarioId,evento) {
+  try {
+    const response = await fetch(`/api/aniadirFav/${usuarioId}`, {
+      method: "PUT",
+      credentials: 'include',
+      headers: {
+        "Authorization": `Bearer ${token}`,  // Enviar el token como Bearer Token
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(evento),//enviamos el objeto evento
+    });
+    const data=await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.mensaje);//lanzamos el error
+    }
+    console.log(data.mensaje);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 //funcion para obtener los tipos de eventos de tickmaster
