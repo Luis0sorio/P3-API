@@ -445,6 +445,28 @@ function mostrarEventos(eventos) {
 
 }
 
+async function aniadirFav(usuarioId,evento) {
+  try {
+    const response = await fetch(`/api/aniadirFav/${usuarioId}`, {
+      method: "PUT",
+      credentials: 'include',
+      headers: {
+        "Authorization": `Bearer ${token}`,  // Enviar el token como Bearer Token
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(evento),//enviamos el objeto evento
+    });
+    const data=await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.mensaje);//lanzamos el error
+    }
+    console.log(data.mensaje);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 //funcion para obtener los tipos de eventos de tickmaster
 
 function obtenerTipoEvento(evento) {
