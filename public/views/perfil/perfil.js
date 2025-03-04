@@ -1,16 +1,14 @@
+const infoUser = JSON.parse(localStorage.getItem("datosUser"));
+console.log(infoUser); // Verifica que infoUser tenga las propiedades esperadas
 
-
-// Creamos el formulario de modificacion de usuario con el DOM
+// Función para crear el formulario de perfil de usuario
 function formPerfilUsuario() {
-  
-  const usuario = localStorage.getItem("nombreUser");
-  
   const div = document.createElement('div');
   div.classList.add('formulario-perfil');
 
   const titulo = document.createElement('h1');
   titulo.setAttribute('id', 'titulo');
-  titulo.textContent = `Perfil de ${usuario}`;
+  titulo.textContent = `Perfil de ${infoUser.usuario}`;
   div.appendChild(titulo);
 
   const formPerfil = document.createElement('form');
@@ -86,11 +84,12 @@ function formPerfilUsuario() {
 
   // Agregamos el contenedor al cuerpo del documento
   document.body.appendChild(div);
+
+  return formPerfil; // Retornamos el formulario para poder usarlo fuera de la función
 }
 
 // Función para actualizar un campo específico
 async function actualizarCampo(campo) {
-  const usuarioForm = localStorage.getItem("nombreUser"); // Usuario original
   let valor;
 
   // Obtener el valor del campo correspondiente
@@ -116,25 +115,36 @@ async function actualizarCampo(campo) {
     return;
   }
 
-  // ***** AQUÍ VA EL FETCH DE SALMA *****
-  // Crear el objeto con los datos actualizados
+  // Aquí iría el fetch para actualizar el campo en el backend
+  try {
+    const respuesta = await fetch('/api/usuario', {
+      method: "PUT",
+      credentials: 'include',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ usuarioForm: infoUser.usuario, [campo]: valor }),
+    });
 
-  // Usuario original para buscar en la base de datos
-  // Campo a actualizar
+    const data = await respuesta.json();
+    if (!respuesta.ok) {
+      throw new Error(data.mensaje);
+    }
 
-  // Enviamos los datos actualizados al backend con fetch 
-  // método PUT
-
-  // Actualizamos el localStorage si se cambió el nombre de usuario
+    alert(`Campo ${campo} actualizado con éxito`);
+    if (campo === "usuario") {
+      // Actualizar el título si se cambió el nombre de usuario
+      document.getElementById("titulo").textContent = `Perfil de ${valor}`;
+      infoUser.usuario = valor;
+      localStorage.setItem("datosUser", JSON.stringify(infoUser));
+    }
+  } catch (error) {
+    alert(error.message);
+    console.error(error);
+  }
 }
 
-// Función para cargar los datos actuales del usuario
-// ***** AQUÍ SALMA DEBE CAMBIAR O AÑADIR SUS LINEAS *****
-async function cargarDatosUsuario(usuario) {
-  // hacemos una solicitud GET al backend para obtener los datos del usuario
-  // Rellenamos el formulario con los datos actuales (modificados)
-}
-
+// Función para crear el enlace de volver al mapa
 function enlaceMapa() {
   const enlaceMapa = document.createElement("a");
   enlaceMapa.setAttribute("href", "/views/dashboard/index.html");
@@ -142,14 +152,19 @@ function enlaceMapa() {
   document.body.appendChild(enlaceMapa);
 }
 
+// Cargar el formulario y los datos del usuario cuando la página se cargue
 window.onload = function () {
-  // Verificamos si el usuario está autenticado
-  const usuario = localStorage.getItem("nombreUser");
+  const formPerfil = formPerfilUsuario(); // Obtenemos el formulario
 
-  // Cargamos los datos del usuario
-  datosUser(usuario);
+  // Rellenamos el formulario con los datos del usuario
+  if (infoUser && infoUser.usuario && infoUser.email) {
+    document.getElementById('usuario').value = infoUser.usuario;
+    document.getElementById('email').value = infoUser.email;
+  } else {
+    console.error("Valores no encontrados");
+  }
 
-  // Evento que envía el formulario de modificacion del usuario
+  // Evento que envía el formulario de modificación del usuario
   formPerfil.addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -165,34 +180,13 @@ window.onload = function () {
       return;
     }
 
-    // Verificamos si algún campo ha sido modificado
-    const usuarioForm = localStorage.getItem('nombreUser');
-    const emailForm = localStorage.getItem('email');
-
-    if (usuario === usuarioForm && email === emailForm && !password) {
-      alert("No se han realizado cambios en el perfil");
-      return;
-    }
-
     // Creamos el objeto con los datos actualizados
     const datosActualizados = {
-      usuarioForm, // busca el usuario actual
-      /*
-      usuario: usuario || undefined,
-      email: email || undefined,
-      password: password || undefined, */
+      usuario,
+      email,
+      password,
     };
 
-    // Agregamos los campos que se han modificado
-    if (usuario && usuario !== usuarioForm) {
-      datosActualizados.usuario = usuario;
-    }
-    if (email && email !== emailForm) {
-      datosActualizados.email = email;
-    }
-    if (password) {
-      datosActualizados.password = password;
-    }
     try {
       // Enviar los datos actualizados al backend
       const respuesta = await fetch("/api/usuario", {
@@ -202,39 +196,25 @@ window.onload = function () {
         },
         body: JSON.stringify(datosActualizados),
       });
+
       const data = await respuesta.json();
       if (!respuesta.ok) {
         throw new Error(data.mensaje);
-      } 
+      }
+
       alert("Perfil actualizado con éxito");
-        if (usuario && usuario !== usuarioForm) {
-          localStorage.setItem('nombreUser', usuario);
-          document.getElementById("titulo").textContent = `Perfil de ${usuario}`;
-        }
+      if (usuario && usuario !== infoUser.usuario) {
+        // Actualizar el título si se cambió el nombre de usuario
+        document.getElementById("titulo").textContent = `Perfil de ${usuario}`;
+        infoUser[usuario] = datosActualizados.user; // Actualizar el campo específico
+        infoUser[email] = datosActualizados.email; // Actualizar el campo específico
+        localStorage.setItem("datosUser", JSON.stringify(infoUser));
+      }
     } catch (error) {
-      alert(error);
+      alert(error.message);
       console.error(error);
     }
   });
 
-  async function datosUser(usuario) {
-    try {
-      const response = await fetch(`/api/usuario/${usuario}`, {
-        method: "GET",
-      });
-      const data=await response.json();//obtnemos y cnvertimos la respuesta
-  
-      if (!response.ok) {
-        throw new Error(data.mensaje);//lanzamos el error
-      }
-      document.getElementById('usuario').value = data.usuario;//rellenamos el form cn los dat
-      document.getElementById('email').value = data.email;
-
-    } catch (error) {//recibimos el error y 
-      console.log(error);
-    }
-  }
-  formPerfilUsuario();
   enlaceMapa();
 };
-

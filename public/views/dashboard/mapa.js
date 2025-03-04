@@ -5,7 +5,7 @@ let tipos=["Music", "Sports", "Theater", "Comedy", "Arts","Festivals","Musicals"
 
 let datos= JSON.parse(localStorage.getItem("datosUser"));
 
-const nombreUsuario = datos.nombre;
+const nombreUsuario = datos.usuario;
 console.log(nombreUsuario);
 
 let marcadores=[];//guardamos los marcadores aqui

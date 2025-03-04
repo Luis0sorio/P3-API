@@ -101,6 +101,8 @@ const verificarLogin = async (req, res) => {
       id: verificarUsuario._id,
       nombre: verificarUsuario.nombre,
       ciudad: verificarUsuario.ciudad,
+      usuario: verificarUsuario.usuario,
+      email: verificarUsuario.email,
     };
    
     return res.status(200).json({

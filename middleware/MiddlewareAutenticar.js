@@ -5,7 +5,7 @@ require('dotenv').config();
 const SECRETO = process.env.SECRETO;
 
 const verificarToken = async (req, res, next) => {
-  const token = req.cookies.token; // Obtener el token de la cookie
+  const token = req.cookies.access_token; // Obtener el nombre del token de la cookie
 
   if (!token) {
     return res.status(401).json({ mensaje: 'Token no proporcionado' });
